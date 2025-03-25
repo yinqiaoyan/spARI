@@ -15,9 +15,9 @@ spARI(r_labels, c_labels, coords, alpha_val = 0.8, print_time = FALSE)
 \item{coords}{Spatial coordinates (2 columns). 1st column: first dimension coordinate.
 2nd column: second dimension coordinate.}
 
-\item{alpha_val}{A coefficient used to control the upper bound of the weight
-functions for "sg" and "gs" object pairs, preventing the weight functions
-from approaching 1 excessively.}
+\item{alpha_val}{Coefficient belongs to the open interval (0, 1) to keep a positive gap
+between the maximal weight of the disagreement pair and the weight one of the agreement pair.
+Default is 0.8.}
 
 \item{print_time}{Logical; if TRUE, the total execution time is printed. Default is FALSE.}
 }
