@@ -59,8 +59,8 @@ Run spARI function to compute spRI and spARI. The meaning of each argument in th
 * print_time: Logical; if TRUE, the total execution time is printed. Default is FALSE.
 
 ```R
-res_value1 = spARI(r_labels=true_labels, c_labels=c1_labels, coords, print_time = TRUE)
-res_value2 = spARI(r_labels=true_labels, c_labels=c2_labels, coords, print_time = TRUE)
+res_value1 = spARI(true_labels, c1_labels, coords)
+res_value2 = spARI(true_labels, c2_labels, coords)
 ```
 
 Users can simply run the code `example("spARI")` to carry out this example.
