@@ -37,8 +37,6 @@ Import the required R packages.
 
 ```R
 library(spARI)
-library(aricode)
-library(ggplot2)
 ```
 
  Read the example data stored in this package. The example data includes:
