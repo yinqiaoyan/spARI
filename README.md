@@ -2,7 +2,7 @@
 
 Current `spARI` R package: version 1.0 
 
-The R package `spARI` is built to the spatially aware Rand index (spRI) as well as its adjusted version (spARI) that incorporate the spatial distance information into the clustering evaluation. When comparing two partitions, spRI provides a pair of objects that are in the same cluster of one partition but are in different clusters of the other partition (called disagreement pair) with a weight relying on the distance of the two objects. spRI is then adjusted to correct for random chances such that its expectation takes on the zero value under an appropriate random null model, resulting in spARI. This R package can be installed in Windows, Linux, and Mac OS.
+The R package `spARI` is built to the spatially aware Rand index (spRI) as well as its adjusted version (spARI) that incorporate the spatial distance information into the clustering evaluation. When comparing two partitions, spRI provides a pair of objects that are in the same cluster of one partition but are in different clusters of the other partition (called disagreement pair) with a weight relying on the distance of the two objects. This R package can be installed in Windows, Linux, and Mac OS.
 
 
 
@@ -22,10 +22,10 @@ devtools::install_github("yinqiaoyan/spARI")
 
 The data description is given in the following table.
 
-|  ST Dataset  | Cell number | Gene number |                        Download links                        |
-| :----------: | :---------: | :---------: | :----------------------------------------------------------: |
-| DLPFC 151509 |    1,207    |    1,020    |                                                              |
-|   STARmap*   |    1,207    |    1,020    | Raw data: http://sdmbench.drai.cn/tcm/download/?file_path=/mnt/JINGD/data/file/sdmbench/db/STARmap_20180505_BY3_1k.h5ad  <br/>Cell type annotation: https://drive.google.com/drive/folders/1I1nxheWlc2RXSdiv24dex3YRaEh780my?usp=sharing |
+|  ST Dataset  | Spot/Cell number | Gene number |                        Download links                        |
+| :----------: | :--------------: | :---------: | :----------------------------------------------------------: |
+| DLPFC 151509 |      4,789       |   33,538    |        https://github.com/LieberInstitute/spatialLIBD        |
+|   STARmap*   |      1,207       |    1,020    | Raw data: http://sdmbench.drai.cn/tcm/download/?file_path=/mnt/JINGD/data/file/sdmbench/db/STARmap_20180505_BY3_1k.h5ad  <br/>Cell type annotation: https://drive.google.com/drive/folders/1I1nxheWlc2RXSdiv24dex3YRaEh780my?usp=sharing |
 
 
 
