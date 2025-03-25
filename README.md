@@ -1,8 +1,10 @@
 ## spARI
 
-Current `spARI` R package: version 1.0 
+Current version: 1.0 
 
-The R package `spARI` is built to the spatially aware Rand index (spRI) as well as its adjusted version (spARI) that incorporate the spatial distance information into the clustering evaluation. When comparing two partitions, spRI provides a pair of objects that are in the same cluster of one partition but are in different clusters of the other partition (called disagreement pair) with a weight relying on the distance of the two objects, and spARI is an adjustment of spRI that corrects for random chances such that its expectation takes on the zero value under an appropriate random null model. This R package can be installed in Windows, Linux, and Mac OS.
+The R package **spARI** is designed to compute two novel clustering evaluation metrics—the **spatially aware Rand index (spRI)** and its adjusted version (**spARI**)—for assessing spatial transcriptomics clustering. Unlike the traditional Rand index (RI) and adjusted Rand index (ARI), spRI and spARI incorporate spatial distance information into clustering evaluation. When comparing two partitions, spRI assigns a weight to each disagreement pair—two objects in the same cluster of one partition but in different clusters of the other—based on their spatial distance, allowing for a more refined distinction between disagreement pairs. The spRI value ranges between zero and one, while the spARI value is less than one with an expected value of zero. Higher spARI values indicate greater clustering accuracy and a more compact spatial structure. 
+
+To implement this package, users only need to input the two partitions and the corresponding spatial coordinates, and the main function `spARI` efficiently computes spRI and spARI in a rapid and user-friendly manner. Additionally, the main function includes a built-in normalization step for spatial coordinates, eliminating the need for manual preprocessing. The **spARI** package is compatible with Windows, Linux, and macOS and can be easily installed across these platforms.
 
 
 
@@ -10,7 +12,7 @@ The R package `spARI` is built to the spatially aware Rand index (spRI) as well 
 
 1. R version >= 4.1.3.
 2. CRAN package: stats (>=4.1.3)
-3. Install the package `spARI`.
+3. Install the package **spARI**.
 
 ```R
 devtools::install_github("yinqiaoyan/spARI")
@@ -31,7 +33,7 @@ The data description is given in the following table.
 
 ## Example Code
 
-The following code shows an example (the third simulation study in the manuscript) that runs the main function "spARI" in our package.
+The following code shows an example (the third simulation study in the manuscript) that runs the main function `spARI` in our package.
 
 Import the required R packages.
 
@@ -55,7 +57,7 @@ Run spARI function to compute spRI and spARI. The meaning of each argument in th
 * r_labels: the reference partition
 * c_labels: the clustering partition
 * coords: spatial coordinates of all the objects
-* alpha_val: coefficient belongs to the open interval $(0, 1)$ to keep a positive gap between the maximal weight of the disagreement pair and the weight one of the agreement pair. Default is 0.8.
+* alpha_val: coefficient belongs to the open interval (0, 1) to keep a positive gap between the maximal weight of the disagreement pair and the weight one of the agreement pair. Default is 0.8.
 * print_time: Logical; if TRUE, the total execution time is printed. Default is FALSE.
 
 ```R
@@ -77,4 +79,5 @@ example("spARI")
 ## Remarks
 
 If you have any questions regarding this package, please contact Yinqiao Yan at [yinqiaoyan@bjut.edu.cn](mailto:yinqiaoyan@bjut.edu.cn).
+
 
