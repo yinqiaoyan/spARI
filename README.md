@@ -2,7 +2,7 @@
 
 Current `spARI` R package: version 1.0 
 
-The R package `spARI` is built to the spatially aware Rand index (spRI) as well as its adjusted version (spARI) that incorporate the spatial distance information into the clustering evaluation. When comparing two partitions, spRI provides a pair of objects that are in the same cluster of one partition but are in different clusters of the other partition (called disagreement pair) with a weight relying on the distance of the two objects. This R package can be installed in Windows, Linux, and Mac OS.
+The R package `spARI` is built to the spatially aware Rand index (spRI) as well as its adjusted version (spARI) that incorporate the spatial distance information into the clustering evaluation. When comparing two partitions, spRI provides a pair of objects that are in the same cluster of one partition but are in different clusters of the other partition (called disagreement pair) with a weight relying on the distance of the two objects. spRI is then adjusted to correct for random chances such that its expectation takes on the zero value under an appropriate random null model, resulting in spARI. This R package can be installed in Windows, Linux, and Mac OS.
 
 
 
