@@ -5,7 +5,7 @@
 \title{The function spARI is the main function to calculate the spARI value proposed
     in this paper, which is the adjusted version of spRI.}
 \usage{
-spARI(r_labels, c_labels, coords, alpha_val = 0.8, print_time = FALSE)
+spARI(r_labels, c_labels, coords, alpha_val = 0.8)
 }
 \arguments{
 \item{r_labels}{Annotated labels of all spots/cells. Can be numeric vector or character vector.}
@@ -18,8 +18,6 @@ spARI(r_labels, c_labels, coords, alpha_val = 0.8, print_time = FALSE)
 \item{alpha_val}{Coefficient belongs to the open interval (0, 1) to keep a positive gap
 between the maximal weight of the disagreement pair and the weight one of the agreement pair.
 Default is 0.8.}
-
-\item{print_time}{Logical; if TRUE, the total execution time is printed. Default is FALSE.}
 }
 \value{
 spARI returns an R numeric including the following information.
@@ -39,8 +37,8 @@ library(spARI)
 # (4) coords: spatial coordinates of these spots (2 columns)
 data(spARI_example_data)
 ### --- Compute spRI and spARI --- ###
-res_value1 = spARI(r_labels=true_labels, c_labels=c1_labels, coords, print_time = TRUE)
-res_value2 = spARI(r_labels=true_labels, c_labels=c2_labels, coords, print_time = TRUE)
+res_value1 = spARI(r_labels=true_labels, c_labels=c1_labels, coords)
+res_value2 = spARI(r_labels=true_labels, c_labels=c2_labels, coords)
 cat(paste0("1st method: spRI=", round(res_value1[1], 3), ", spARI=", round(res_value1[2], 3)))
 cat(paste0("2nd method: spRI=", round(res_value2[1], 3), ", spARI=", round(res_value2[2], 3)))
 

@@ -8,7 +8,6 @@
 #' @param alpha_val Coefficient belongs to the open interval (0, 1) to keep a positive gap
 #'     between the maximal weight of the disagreement pair and the weight one of the agreement pair.
 #'     Default is 0.8.
-#' @param print_time Logical; if TRUE, the total execution time is printed. Default is FALSE.
 #'
 #' @return spARI returns an R numeric including the following information.
 #' \item{spRI_value}{numeric, the spRI value calculated by r_labels and c_labels}
@@ -23,14 +22,14 @@
 #' # (4) coords: spatial coordinates of these spots (2 columns)
 #' data(spARI_example_data)
 #' ### --- Compute spRI and spARI --- ###
-#' res_value1 = spARI(r_labels=true_labels, c_labels=c1_labels, coords, print_time = TRUE)
-#' res_value2 = spARI(r_labels=true_labels, c_labels=c2_labels, coords, print_time = TRUE)
+#' res_value1 = spARI(r_labels=true_labels, c_labels=c1_labels, coords)
+#' res_value2 = spARI(r_labels=true_labels, c_labels=c2_labels, coords)
 #' cat(paste0("1st method: spRI=", round(res_value1[1], 3), ", spARI=", round(res_value1[2], 3)))
 #' cat(paste0("2nd method: spRI=", round(res_value2[1], 3), ", spARI=", round(res_value2[2], 3)))
 #'
 #' @export
 
-spARI = function(r_labels, c_labels, coords, alpha_val=0.8, print_time=FALSE) {
+spARI = function(r_labels, c_labels, coords, alpha_val=0.8) {
 
   if (length(unique(r_labels)) == 1 & length(unique(c_labels)) == 1) {
     return(c(1, 1))
@@ -71,8 +70,6 @@ spARI = function(r_labels, c_labels, coords, alpha_val=0.8, print_time=FALSE) {
 
 
   ## Compute spRI
-  cat("=== Computing spRI ===\n")
-  s_time = Sys.time()
   same_group_c_pairs <- outer(c_labels, c_labels, `==`)
   same_group_r_pairs <- outer(r_labels, r_labels, `==`)
   sg_pairs = which(same_group_c_pairs & !same_group_r_pairs, arr.ind = TRUE)  # s*g type
@@ -81,14 +78,8 @@ spARI = function(r_labels, c_labels, coords, alpha_val=0.8, print_time=FALSE) {
   sg_pairs = sg_pairs[sg_pairs[,1] < sg_pairs[,2], ]
   gs_pairs = gs_pairs[gs_pairs[,1] < gs_pairs[,2], ]
 
-  # dist_vec_sg = dist_mat[(n_objects - 0.5) * sg_pairs[,1] - 0.5 * sg_pairs[,1]^2 + sg_pairs[,2] - n_objects]
-  # dist_vec_gs = dist_mat[(n_objects - 0.5) * gs_pairs[,1] - 0.5 * gs_pairs[,1]^2 + gs_pairs[,2] - n_objects]
-
   sums_f_and_h = sum_f_func(sg_pairs, dist_mat) +
     sum_h_func(gs_pairs, dist_mat)
-  # sums_f_and_h = sum(f_func(dist_vec_sg)) +
-  #   sum(h_func(dist_vec_gs))
-
 
   unique_value_r = sort(unique(r_labels))
   unique_value_c = sort(unique(c_labels))
@@ -113,9 +104,7 @@ spARI = function(r_labels, c_labels, coords, alpha_val=0.8, print_time=FALSE) {
   spRI_value = (num_A + sums_f_and_h) / n_obj_choose
 
 
-
   ## Compute spARI
-  cat("=== Computing spARI ===\n")
   p = 0.5 * (parSum_r_sqsum - n_objects) / n_obj_choose
   q = 0.5 * (parSum_c_sqsum - n_objects) / n_obj_choose
 
@@ -124,20 +113,14 @@ spARI = function(r_labels, c_labels, coords, alpha_val=0.8, print_time=FALSE) {
 
   E_spRI = p*q*n_obj_choose + (1-p)*(1-q)*n_obj_choose +
     (1-p)*q*sum(f_vals_total) + p*(1-q)*sum(h_vals_total)
-  # E_spRI = (p*q + (1-p)*(1-q))*n_obj_choose +
-  #   (1-p)*q*sum(f_vals_total) + p*(1-q)*sum(h_vals_total)  # slower !?
   E_spRI = E_spRI / n_obj_choose
 
   spARI_value = (spRI_value - E_spRI) / (1 - E_spRI)
 
-  e_time = Sys.time()
-  exeTime = e_time - s_time
 
-  if (print_time) {
-    print(exeTime)
-  }
-
+  ## Outputs
   outputs = c(spRI_value, spARI_value)
+  names(outputs) = c("spRI", "spARI")
   return(outputs)
 }
 
