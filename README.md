@@ -58,7 +58,6 @@ Run spARI function to compute spRI and spARI. The meaning of each argument in th
 * c_labels: the clustering partition
 * coords: spatial coordinates of all the objects
 * alpha_val: coefficient belongs to the open interval (0, 1) to keep a positive gap between the maximal weight of the disagreement pair and the weight one of the agreement pair. Default is 0.8.
-* print_time: Logical; if TRUE, the total execution time is printed. Default is FALSE.
 
 ```R
 res_value1 = spARI(true_labels, c1_labels, coords)
