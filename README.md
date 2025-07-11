@@ -66,8 +66,8 @@ Run spARI function to compute spRI and spARI. The meaning of each argument in th
 * alpha_val: coefficient belongs to the open interval (0, 1) to keep a positive gap between the maximal weight of the disagreement pair and the weight one of the agreement pair. Default is 0.8
 
 ```R
-res_value1 = spARI(true_labels, c1_labels, coords)
-res_value2 = spARI(true_labels, c2_labels, coords)
+res_value1 = spARI(true_labels, c1_labels, coords=coords)
+res_value2 = spARI(true_labels, c2_labels, coords=coords)
 ```
 
 Users can simply run the code `example("spARI")` to carry out this example.
