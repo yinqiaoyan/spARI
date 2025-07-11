@@ -1,3 +1,10 @@
+#' @useDynLib spARI, .registration = TRUE
+#' @importFrom Rcpp evalCpp
+#' @exportPattern "^[[:alpha:]]+"
+#'
+NULL
+
+
 #' Data: spARI_example_data
 #'
 #' spARI_example_data contains coords and gene_data_pc

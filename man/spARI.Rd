@@ -2,10 +2,17 @@
 % Please edit documentation in R/spARI.R
 \name{spARI}
 \alias{spARI}
-\title{The function spARI is the main function to calculate the spARI value proposed
-    in this paper, which is the adjusted version of spRI.}
+\title{The function spARI is the main function to calculate spRI and spARI values proposed
+    in the paper.}
 \usage{
-spARI(r_labels, c_labels, coords, alpha_val = 0.8)
+spARI(
+  r_labels,
+  c_labels,
+  coords = NULL,
+  dist_mat = NULL,
+  Is_spmat = FALSE,
+  alpha_val = 0.8
+)
 }
 \arguments{
 \item{r_labels}{Annotated labels of all spots/cells. Can be numeric vector or character vector.}
@@ -13,7 +20,12 @@ spARI(r_labels, c_labels, coords, alpha_val = 0.8)
 \item{c_labels}{Estimated labels obtained by a certain spatial clustering method.}
 
 \item{coords}{Spatial coordinates (2 columns). 1st column: first dimension coordinate.
-2nd column: second dimension coordinate.}
+2nd column: second dimension coordinate. Default is NULL.}
+
+\item{dist_mat}{Distance matrix provided by users. If both coords and dist_mat
+are provided, we will directly use the distance matrix. Default is NULL.}
+
+\item{Is_spmat}{Logical; if TRUE, dist_mat is a sparse matrix ("dgCMatrix" or "dgTMatrix"). Default is FALSE.}
 
 \item{alpha_val}{Coefficient belongs to the open interval (0, 1) to keep a positive gap
 between the maximal weight of the disagreement pair and the weight one of the agreement pair.
@@ -25,8 +37,8 @@ spARI returns an R numeric including the following information.
 \item{spARI_value}{numeric, the spARI value calculated by r_labels and c_labels}
 }
 \description{
-The function spARI is the main function to calculate the spARI value proposed
-    in this paper, which is the adjusted version of spRI.
+The function spARI is the main function to calculate spRI and spARI values proposed
+    in the paper.
 }
 \examples{
 library(spARI)

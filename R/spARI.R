@@ -1,10 +1,13 @@
-#' The function spARI is the main function to calculate the spARI value proposed
-#'     in this paper, which is the adjusted version of spRI.
+#' The function spARI is the main function to calculate spRI and spARI values proposed
+#'     in the paper.
 #'
 #' @param r_labels Annotated labels of all spots/cells. Can be numeric vector or character vector.
 #' @param c_labels Estimated labels obtained by a certain spatial clustering method.
 #' @param coords Spatial coordinates (2 columns). 1st column: first dimension coordinate.
-#'     2nd column: second dimension coordinate.
+#'     2nd column: second dimension coordinate. Default is NULL.
+#' @param dist_mat Distance matrix provided by users. If both coords and dist_mat
+#'     are provided, we will directly use the distance matrix. Default is NULL.
+#' @param Is_spmat Logical; if TRUE, dist_mat is a sparse matrix ("dgCMatrix" or "dgTMatrix"). Default is FALSE.
 #' @param alpha_val Coefficient belongs to the open interval (0, 1) to keep a positive gap
 #'     between the maximal weight of the disagreement pair and the weight one of the agreement pair.
 #'     Default is 0.8.
@@ -29,7 +32,7 @@
 #'
 #' @export
 
-spARI = function(r_labels, c_labels, coords, alpha_val=0.8) {
+spARI = function(r_labels, c_labels, coords=NULL, dist_mat=NULL, Is_spmat=FALSE, alpha_val=0.8) {
 
   if (length(unique(r_labels)) == 1 & length(unique(c_labels)) == 1) {
     return(c(1, 1))
@@ -38,11 +41,15 @@ spARI = function(r_labels, c_labels, coords, alpha_val=0.8) {
   n_objects = length(r_labels)
   n_obj_choose = choose(n_objects, 2)
 
-  ## Coordinates normalization
-  coords[,1] = (coords[,1] - min(coords[,1])) / (max(coords[,1]) - min(coords[,1]))
-  coords[,2] = (coords[,2] - min(coords[,2])) / (max(coords[,2]) - min(coords[,2]))
+  if (is.null(coords) & is.null(dist_mat)) {
+    stop("Please provide either the spatial coordinates or the distance matrix!")
+  } else if (!is.null(coords) & is.null(dist_mat)) {
+    ## Coordinates normalization
+    coords[,1] = (coords[,1] - min(coords[,1])) / (max(coords[,1]) - min(coords[,1]))
+    coords[,2] = (coords[,2] - min(coords[,2])) / (max(coords[,2]) - min(coords[,2]))
+    dist_mat = stats::dist(coords)
+  }
 
-  dist_mat = stats::dist(coords)
 
   ## f function
   f_func = function(t) {
@@ -52,6 +59,16 @@ spARI = function(r_labels, c_labels, coords, alpha_val=0.8) {
   ## h function
   h_func = function(t) {
     return(alpha_val * (1 - exp(- t^2)))
+  }
+
+  ## f function (sparse mat)
+  f_func_sp = function(t_sp) {
+    return(alpha_val * exp(- t_sp@x^2))
+  }
+
+  ## h function (sparse mat)
+  h_func_sp = function(t_sp) {
+    return(alpha_val * (1 - exp(- t_sp@x^2)))
   }
 
   ## sum of f function
@@ -68,18 +85,33 @@ spARI = function(r_labels, c_labels, coords, alpha_val=0.8) {
     return(sum(h_vals))
   }
 
+  ## sum of f function (sparse mat)
+  sum_f_func_sp = function(obj_pairs, dist_mat_sp) {
+    dist_vec = dist_mat_sp[obj_pairs]
+    f_vals = f_func(dist_vec)
+    return(sum(f_vals))
+  }
+
+  ## sum of h function (sparse mat)
+  sum_h_func_sp = function(obj_pairs, dist_mat_sp) {
+    dist_vec = dist_mat_sp[obj_pairs]
+    h_vals = h_func(dist_vec)
+    return(sum(h_vals))
+  }
+
 
   ## Compute spRI
-  same_group_c_pairs <- outer(c_labels, c_labels, `==`)
-  same_group_r_pairs <- outer(r_labels, r_labels, `==`)
-  sg_pairs = which(same_group_c_pairs & !same_group_r_pairs, arr.ind = TRUE)  # s*g type
-  gs_pairs = which(same_group_r_pairs & !same_group_c_pairs, arr.ind = TRUE)  # g*s type
+  sg_pairs <- generate_sg_pairs_int(c_labels, r_labels) + 1
+  gs_pairs <- generate_gs_pairs_int(c_labels, r_labels) + 1
 
-  sg_pairs = sg_pairs[sg_pairs[,1] < sg_pairs[,2], ]
-  gs_pairs = gs_pairs[gs_pairs[,1] < gs_pairs[,2], ]
 
-  sums_f_and_h = sum_f_func(sg_pairs, dist_mat) +
-    sum_h_func(gs_pairs, dist_mat)
+  if (Is_spmat) {
+    sums_f_and_h = sum_f_func_sp(sg_pairs, dist_mat) +
+      sum_h_func_sp(gs_pairs, dist_mat)
+  } else {
+    sums_f_and_h = sum_f_func(sg_pairs, dist_mat) +
+      sum_h_func(gs_pairs, dist_mat)
+  }
 
   unique_value_r = sort(unique(r_labels))
   unique_value_c = sort(unique(c_labels))
@@ -108,8 +140,14 @@ spARI = function(r_labels, c_labels, coords, alpha_val=0.8) {
   p = 0.5 * (parSum_r_sqsum - n_objects) / n_obj_choose
   q = 0.5 * (parSum_c_sqsum - n_objects) / n_obj_choose
 
-  f_vals_total = f_func(dist_mat)
-  h_vals_total = h_func(dist_mat)
+  if (Is_spmat) {
+    f_vals_total = f_func_sp(dist_mat)
+    h_vals_total = h_func_sp(dist_mat)
+  } else {
+    f_vals_total = f_func(dist_mat)
+    h_vals_total = h_func(dist_mat)
+  }
+
 
   E_spRI = p*q*n_obj_choose + (1-p)*(1-q)*n_obj_choose +
     (1-p)*q*sum(f_vals_total) + p*(1-q)*sum(h_vals_total)
