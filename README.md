@@ -2,11 +2,13 @@
 
 Current version: 2.0 (20250711)
 
+We added two arguments in the main function "spARI": `dist_mat` and `Is_spmat`, allowing users to flexibly choose to provide either the spatial coordinates or a precomputed distance matrix. For large-scale spatial data (e.g., 100,000 objects), users can input a sparse distance matrix-for instance, by retaining only distances to the $k$ nearest neighbors for each object. In such cases, users should set `Is_spmat = TRUE` to ensure that the internal computations are adapted for sparse matrices of class "dgCMatrix" or "dgTMatrix".
+
+Previous version: 1.0 (20250327)
+
 The R package **spARI** is designed to compute two novel clustering evaluation metrics—the **spatially aware Rand index (spRI)** and its adjusted version (**spARI**)—for assessing spatial transcriptomics clustering. Unlike the traditional Rand index (RI) and adjusted Rand index (ARI), spRI and spARI incorporate spatial distance information into clustering evaluation. When comparing two partitions, spRI assigns a weight to each disagreement pair—two objects in the same cluster of one partition but in different clusters of the other—based on their spatial distance, allowing for a more refined distinction between disagreement pairs. The spRI value ranges between zero and one, while the spARI value is less than one with an expected value of zero. Higher spARI values indicate greater clustering accuracy and a more compact spatial structure. 
 
 To implement this package, users are required to input the two partitions, and to optionally provide either the spatial coordinates or the distance matrix. The main function "spARI" then automatically computes spRI and spARI in a fast and user-friendly manner. If spatial coordinates are provided, a built-in normalization step is applied to remove the effect of spatial location unit. The `spARI` package is compatible with Windows, Linux, and macOS, and can be easily installed on all three platforms.
-
-(Previous version: 1.0 (20250327))
 
 
 
