@@ -11,7 +11,7 @@ To implement this package, users are required to input the two partitions, and t
 ## Prerequisites and Installation
 
 1. R version >= 4.1.3
-2. CRAN package: Rcpp, stats, parallel
+2. CRAN package: Rcpp, stats, parallel, Matrix
 3. Install the package `spARI`
 
 ```R

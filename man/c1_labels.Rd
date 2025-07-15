@@ -3,6 +3,9 @@
 \name{c1_labels}
 \alias{c1_labels}
 \title{Clustering Labels of Simulated Objects}
+\format{
+An integer vector.
+}
 \description{
 A manually generated clustering labels.
 }

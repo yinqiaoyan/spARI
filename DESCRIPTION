@@ -4,7 +4,7 @@ Title: Spatially Aware Adjusted Rand Index for Evaluating Spatial Transcritpomic
     Clustering
 Version: 0.99.0
 Authors@R: c(
-    person("Yinqiao", "Yan", email = "yinqiaoyan@bjut.edu.com", role = c("aut", "cre")),
+    person("Yinqiao", "Yan", email = "yinqiaoyan@bjut.edu.cn", role = c("aut", "cre")),
     person("Xiangnan", "Feng", role = "aut"),
     person("Xiangyu", "Luo", role = "aut")
   )
@@ -24,3 +24,4 @@ Suggests:
     BiocStyle,
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
+biocViews: Clustering, DataImport, GeneExpression, Transcriptomics, Software

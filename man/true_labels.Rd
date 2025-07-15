@@ -3,6 +3,9 @@
 \name{true_labels}
 \alias{true_labels}
 \title{True Labels of Simulated Objects}
+\format{
+An integer vector.
+}
 \description{
 A manually generated true labels.
 }

@@ -124,7 +124,7 @@ K = 15
 set.seed(123)
 
 # reference partition
-true_labels = sample(1:K, N, replace = T)
+true_labels = sample(1:K, N, replace = TRUE)
 # clustering partition
 c_labels = true_labels
 ids = sample(which(true_labels == 1), 5000)

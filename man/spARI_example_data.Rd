@@ -4,15 +4,18 @@
 \name{spARI_example_data}
 \alias{spARI_example_data}
 \title{Data: spARI_example_data}
-\usage{
-data(spARI_example_data)
-}
-\description{
-spARI_example_data contains the following items:
+\format{
+A RData file:
 \describe{
   \item{true_labels}{ground truth of 160 spots (input as r_labels)}
   \item{c1_labels}{one partition results of these spots (input as c_labels)}
   \item{c2_labels}{another partition results of these spots (input as c_labels)}
   \item{coords}{spatial coordinates of these spots (2 columns)}
 }
+}
+\usage{
+data(spARI_example_data)
+}
+\description{
+spARI_example_data contains the following items:
 }
