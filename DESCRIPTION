@@ -2,15 +2,25 @@ Package: spARI
 Type: Package
 Title: Spatially Aware Adjusted Rand Index for Evaluating Spatial Transcritpomics 
     Clustering
-Version: 2.0
-Author: Yinqiao Yan, Xiangnan Feng, Xiangyu Luo
-Maintainer: Yinqiao Yan <yinqiaoyan@bjut.edu.cn>
+Version: 0.99.0
+Authors@R: c(
+    person("Yinqiao", "Yan", email = "yinqiaoyan@bjut.edu.com", role = c("aut", "cre")),
+    person("Xiangnan", "Feng", role = "aut"),
+    person("Xiangyu", "Luo", role = "aut")
+  )
 Description: The R package used in the manuscript "Spatially Aware Adjusted Rand 
     Index for Evaluating Spatial Transcritpomics Clustering".
 License: GPL (>= 2)
 Encoding: UTF-8
 Depends: R (>= 4.1.0)
-LazyData: true
-Imports: Rcpp, stats
+Imports: Rcpp, stats, parallel, Matrix
 LinkingTo: Rcpp
+LazyData: true
 RoxygenNote: 7.3.2
+VignetteBuilder: knitr
+Suggests: 
+    knitr,
+    rmarkdown,
+    BiocStyle,
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3

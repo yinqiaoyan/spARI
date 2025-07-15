@@ -8,9 +8,11 @@
 data(spARI_example_data)
 }
 \description{
-spARI_example_data contains coords and gene_data_pc
-true_labels: ground truth of 160 spots (input as r_labels)
-c1_labels: one partition results of these spots (input as c_labels)
-c2_labels: another partition results of these spots (input as c_labels)
-coords: spatial coordinates of these spots (2 columns)
+spARI_example_data contains the following items:
+\describe{
+  \item{true_labels}{ground truth of 160 spots (input as r_labels)}
+  \item{c1_labels}{one partition results of these spots (input as c_labels)}
+  \item{c2_labels}{another partition results of these spots (input as c_labels)}
+  \item{coords}{spatial coordinates of these spots (2 columns)}
+}
 }

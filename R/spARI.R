@@ -7,9 +7,12 @@
 #'     2nd column: second dimension coordinate. Default is NULL.
 #' @param dist_mat Distance matrix provided by users. If both coords and dist_mat
 #'     are provided, we will directly use the distance matrix. Default is NULL.
-#' @param Is_spmat Logical; if TRUE, dist_mat is a sparse matrix ("dgCMatrix" or "dgTMatrix"). Default is FALSE.
-#' @param alpha_val Coefficient belongs to the open interval (0, 1) to keep a positive gap
-#'     between the maximal weight of the disagreement pair and the weight one of the agreement pair.
+#'     Please notice that if dist_mat is sparse, the weight function for object pairs without recorded distances
+#'     degenerates to the setting used in the classical Rand index.
+#' @param f_func_input R function; function f provided by users.
+#' @param h_func_input R function; function h provided by users.
+#' @param alpha_val Parameter in the default functions f and h, which belongs to the open interval (0, 1)
+#'     to keep a positive gap between the maximal weight of the disagreement pair and the weight one of the agreement pair.
 #'     Default is 0.8.
 #'
 #' @return spARI returns an R numeric including the following information.
@@ -25,78 +28,66 @@
 #' # (4) coords: spatial coordinates of these spots (2 columns)
 #' data(spARI_example_data)
 #' ### --- Compute spRI and spARI --- ###
-#' res_value1 = spARI(r_labels=true_labels, c_labels=c1_labels, coords)
-#' res_value2 = spARI(r_labels=true_labels, c_labels=c2_labels, coords)
-#' cat(paste0("1st method: spRI=", round(res_value1[1], 3), ", spARI=", round(res_value1[2], 3)))
-#' cat(paste0("2nd method: spRI=", round(res_value2[1], 3), ", spARI=", round(res_value2[2], 3)))
+#' res1 = spARI(r_labels=true_labels, c_labels=c1_labels, coords=coords)
+#' res2 = spARI(r_labels=true_labels, c_labels=c2_labels, coords=coords)
+#' cat(paste0("1st: spRI=", round(res1[1], 3), ", spARI=", round(res1[2], 3), "\n"))
+#' cat(paste0("2nd: spRI=", round(res2[1], 3), ", spARI=", round(res2[2], 3), "\n"))
 #'
 #' @export
 
-spARI = function(r_labels, c_labels, coords=NULL, dist_mat=NULL, Is_spmat=FALSE, alpha_val=0.8) {
+spARI = function(r_labels, c_labels, coords=NULL, dist_mat=NULL,
+                 f_func_input=NULL, h_func_input=NULL, alpha_val=0.8) {
 
-  if (length(unique(r_labels)) == 1 & length(unique(c_labels)) == 1) {
-    return(c(1, 1))
+  if (length(r_labels) == length(c_labels) &
+      length(unique(r_labels)) == 1 &
+      length(unique(c_labels)) == 1) {
+    ## Outputs
+    outputs = c(1, 1)
+    names(outputs) = c("spRI", "spARI")
+    return(outputs)
+  }
+
+  if (is.null(coords) & is.null(dist_mat)) {
+    stop("Please provide either the spatial coordinates or the distance matrix!")
+  } else if (!is.null(coords) & is.null(dist_mat)) {
+    if (length(r_labels) != length(c_labels) |
+        length(r_labels) != nrow(coords) |
+        length(c_labels) != nrow(coords)) {
+      stop("Please align the length of r_label, the length of c_label, and the dimension of coords!")
+    }
+    ## Coordinates normalization
+    coords[,1] = (coords[,1] - min(coords[,1])) / (max(coords[,1]) - min(coords[,1]))
+    coords[,2] = (coords[,2] - min(coords[,2])) / (max(coords[,2]) - min(coords[,2]))
+    dist_mat = as.matrix(stats::dist(coords))
+    Is_spmat = FALSE
+  } else if (length(r_labels) != length(c_labels) |
+             length(r_labels) != nrow(dist_mat) |
+             length(c_labels) != nrow(dist_mat)) {
+    stop("Please align the length of r_label, the length of c_label, and the dimension of dist_mat!")
+  } else {
+    Is_spmat = ("dgCMatrix" %in% class(dist_mat) | "dgTMatrix" %in% class(dist_mat))
   }
 
   n_objects = length(r_labels)
   n_obj_choose = choose(n_objects, 2)
 
-  if (is.null(coords) & is.null(dist_mat)) {
-    stop("Please provide either the spatial coordinates or the distance matrix!")
-  } else if (!is.null(coords) & is.null(dist_mat)) {
-    ## Coordinates normalization
-    coords[,1] = (coords[,1] - min(coords[,1])) / (max(coords[,1]) - min(coords[,1]))
-    coords[,2] = (coords[,2] - min(coords[,2])) / (max(coords[,2]) - min(coords[,2]))
-    dist_mat = stats::dist(coords)
-  }
-
 
   ## f function
-  f_func = function(t) {
-    return(alpha_val * exp(- t^2))
+  if (is.null(f_func_input)) {
+    f_func = function(t) {
+      return(alpha_val * exp(- t^2))
+    }
+  } else {
+    f_func = f_func_input
   }
 
   ## h function
-  h_func = function(t) {
-    return(alpha_val * (1 - exp(- t^2)))
-  }
-
-  ## f function (sparse mat)
-  f_func_sp = function(t_sp) {
-    return(alpha_val * exp(- t_sp@x^2))
-  }
-
-  ## h function (sparse mat)
-  h_func_sp = function(t_sp) {
-    return(alpha_val * (1 - exp(- t_sp@x^2)))
-  }
-
-  ## sum of f function
-  sum_f_func = function(obj_pairs, dist_mat) {
-    dist_vec = dist_mat[(n_objects - 0.5) * obj_pairs[,1] - 0.5 * obj_pairs[,1]^2 + obj_pairs[,2] - n_objects]
-    f_vals = f_func(dist_vec)
-    return(sum(f_vals))
-  }
-
-  ## sum of h function
-  sum_h_func = function(obj_pairs, dist_mat) {
-    dist_vec = dist_mat[(n_objects - 0.5) * obj_pairs[,1] - 0.5 * obj_pairs[,1]^2 + obj_pairs[,2] - n_objects]
-    h_vals = h_func(dist_vec)
-    return(sum(h_vals))
-  }
-
-  ## sum of f function (sparse mat)
-  sum_f_func_sp = function(obj_pairs, dist_mat_sp) {
-    dist_vec = dist_mat_sp[obj_pairs]
-    f_vals = f_func(dist_vec)
-    return(sum(f_vals))
-  }
-
-  ## sum of h function (sparse mat)
-  sum_h_func_sp = function(obj_pairs, dist_mat_sp) {
-    dist_vec = dist_mat_sp[obj_pairs]
-    h_vals = h_func(dist_vec)
-    return(sum(h_vals))
+  if (is.null(h_func_input)) {
+    h_func = function(t) {
+      return(alpha_val * (1 - exp(- t^2)))
+    }
+  } else {
+    h_func = h_func_input
   }
 
 
@@ -104,14 +95,11 @@ spARI = function(r_labels, c_labels, coords=NULL, dist_mat=NULL, Is_spmat=FALSE,
   sg_pairs <- generate_sg_pairs_int(c_labels, r_labels) + 1
   gs_pairs <- generate_gs_pairs_int(c_labels, r_labels) + 1
 
+  dist_vec_sg = dist_mat[sg_pairs]
+  dist_vec_gs = dist_mat[gs_pairs]
 
-  if (Is_spmat) {
-    sums_f_and_h = sum_f_func_sp(sg_pairs, dist_mat) +
-      sum_h_func_sp(gs_pairs, dist_mat)
-  } else {
-    sums_f_and_h = sum_f_func(sg_pairs, dist_mat) +
-      sum_h_func(gs_pairs, dist_mat)
-  }
+  sums_f_and_h = sum(f_func(dist_vec_sg[dist_vec_sg != 0])) +
+    sum(h_func(dist_vec_gs[dist_vec_gs != 0]))
 
   unique_value_r = sort(unique(r_labels))
   unique_value_c = sort(unique(c_labels))
@@ -141,17 +129,26 @@ spARI = function(r_labels, c_labels, coords=NULL, dist_mat=NULL, Is_spmat=FALSE,
   q = 0.5 * (parSum_c_sqsum - n_objects) / n_obj_choose
 
   if (Is_spmat) {
-    f_vals_total = f_func_sp(dist_mat)
-    h_vals_total = h_func_sp(dist_mat)
+    nonzero_vec = Matrix::tril(dist_mat)@x
+    sum_f_vals_total = sum(f_func(nonzero_vec))
+    sum_h_vals_total = sum(h_func(nonzero_vec))
   } else {
-    f_vals_total = f_func(dist_mat)
-    h_vals_total = h_func(dist_mat)
+    dist_mat_Lvec = dist_mat[lower.tri(dist_mat, diag = FALSE)]
+    sum_f_vals_total = sum(f_func(dist_mat_Lvec))
+    sum_h_vals_total = sum(h_func(dist_mat_Lvec))
   }
 
 
-  E_spRI = p*q*n_obj_choose + (1-p)*(1-q)*n_obj_choose +
-    (1-p)*q*sum(f_vals_total) + p*(1-q)*sum(h_vals_total)
-  E_spRI = E_spRI / n_obj_choose
+  E_spRI = p*q + (1-p)*(1-q) +
+    (1-p)*q*sum_f_vals_total / n_obj_choose +
+    p*(1-q)*sum_h_vals_total / n_obj_choose
+
+  if (E_spRI == 1) {
+    ## Outputs
+    outputs = c(1, 1)
+    names(outputs) = c("spRI", "spARI")
+    return(outputs)
+  }
 
   spARI_value = (spRI_value - E_spRI) / (1 - E_spRI)
 

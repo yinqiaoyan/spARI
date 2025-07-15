@@ -5,7 +5,7 @@ using namespace Rcpp;
 
 // [[Rcpp::plugins(cpp11)]]
 
-// 辅助函数：构造映射
+// auxiliary function: construct the mapping
 std::unordered_map<int, std::vector<int>> build_label_map(const IntegerVector& labels) {
   std::unordered_map<int, std::vector<int>> label_map;
   for (int i = 0; i < labels.size(); ++i) {
