@@ -15,7 +15,8 @@ perm_test(
   alpha_val = 0.8,
   use_parallel = TRUE,
   replicate_times = 100,
-  random_seed = 42
+  random_seed = 42,
+  spe = NULL
 )
 }
 \arguments{
@@ -41,9 +42,15 @@ Default is 0.8.}
 
 \item{use_parallel}{Logical; if TRUE, use parallel code to permute the two partitions. Default is TRUE.}
 
-\item{replicate_times}{Times of permutation of clustering partition. Default is 100.}
+\item{replicate_times}{Number of permutations for both the reference and clustering partitions. Default is 100.}
 
 \item{random_seed}{Random seed for reproducibility. Default is 42.}
+
+\item{spe}{SpatialExperiment object; stores various components of spatial transcriptomics data, including
+spatialCoords: A matrix containing the spatial coordinates;
+colData$cell_type: Annotated cell type labels for each spot or cell;
+colData$cluster: Clustering labels for each spot or cell.
+Default is NULL.}
 }
 \value{
 spARI returns an R numeric including the following information.

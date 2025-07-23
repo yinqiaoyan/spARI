@@ -12,7 +12,8 @@ spARI(
   dist_mat = NULL,
   f_func_input = NULL,
   h_func_input = NULL,
-  alpha_val = 0.8
+  alpha_val = 0.8,
+  spe = NULL
 )
 }
 \arguments{
@@ -35,6 +36,12 @@ degenerates to the setting used in the classical Rand index.}
 \item{alpha_val}{Parameter in the default functions f and h, which belongs to the open interval (0, 1)
 to keep a positive gap between the maximal weight of the disagreement pair and the weight one of the agreement pair.
 Default is 0.8.}
+
+\item{spe}{SpatialExperiment object; stores various components of spatial transcriptomics data, including
+spatialCoords: A matrix containing the spatial coordinates;
+colData$cell_type: Annotated cell type labels for each spot or cell;
+colData$cluster: Clustering labels for each spot or cell.
+Default is NULL.}
 }
 \value{
 spARI returns an R numeric including the following information.

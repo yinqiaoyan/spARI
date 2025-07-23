@@ -15,8 +15,16 @@
 #'     to keep a positive gap between the maximal weight of the disagreement pair and the weight one of the agreement pair.
 #'     Default is 0.8.
 #' @param use_parallel Logical; if TRUE, use parallel code to permute the two partitions. Default is TRUE.
-#' @param replicate_times Times of permutation of clustering partition. Default is 100.
+#' @param replicate_times Number of permutations for both the reference and clustering partitions. Default is 100.
 #' @param random_seed Random seed for reproducibility. Default is 42.
+#' @param spe SpatialExperiment object; stores various components of spatial transcriptomics data, including
+#' spatialCoords: A matrix containing the spatial coordinates;
+#' colData$cell_type: Annotated cell type labels for each spot or cell;
+#' colData$cluster: Clustering labels for each spot or cell.
+#' Default is NULL.
+#'
+#' @importFrom SummarizedExperiment colData
+#' @importFrom SpatialExperiment spatialCoords
 #'
 #' @return spARI returns an R numeric including the following information.
 #' \item{spARI_obs}{numeric, the observed spARI value calculated by r_labels and c_labels}
@@ -32,7 +40,21 @@
 
 perm_test = function(r_labels, c_labels, coords=NULL, dist_mat=NULL,
                      f_func_input=NULL, h_func_input=NULL, alpha_val=0.8,
-                     use_parallel=TRUE, replicate_times=100, random_seed=42) {
+                     use_parallel=TRUE, replicate_times=100, random_seed=42,
+                     spe=NULL) {
+
+  if (missing(r_labels) & missing(c_labels) & !is.null(spe)) {
+    ## ST data is input in SpatialExperiment format
+    if (is.null(colData(spe)$cell_type)) {
+      stop("Please store cell type labels in \"colData$cell_type\"")
+    }
+    if (is.null(colData(spe)$cluster)) {
+      stop("Please store clustering labels in \"colData$cluster\"")
+    }
+    coords = spatialCoords(spe)
+    r_labels = colData(spe)$cell_type
+    c_labels = colData(spe)$cluster
+  }
 
   if (is.null(coords) & is.null(dist_mat)) {
     stop("Please provide either the spatial coordinates or the distance matrix!")
@@ -58,12 +80,15 @@ perm_test = function(r_labels, c_labels, coords=NULL, dist_mat=NULL,
     return(invisible(NULL))
   }
 
+
   # observed spARI value
-  spARI_obs = spARI(r_labels, c_labels, dist_mat=dist_mat)[2]
+  spARI_obs = spARI(r_labels, c_labels, dist_mat=dist_mat,
+                    f_func_input = f_func_input, h_func_input = h_func_input,
+                    alpha_val = alpha_val)[2]
 
   # permutation test (in parallel)
-  if (length(unique(r_labels)) == 1 &
-      length(unique(c_labels)) == 1) {
+  if ((length(unique(r_labels)) == 1 & length(unique(c_labels)) == 1) |
+      (length(unique(r_labels)) == length(r_labels) & length(unique(c_labels)) == length(c_labels))) {
     cat("The spARI value is always equal to one!\n")
     return(invisible(NULL))
   } else if (use_parallel) {

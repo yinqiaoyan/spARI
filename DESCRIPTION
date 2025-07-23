@@ -2,7 +2,7 @@ Package: spARI
 Type: Package
 Title: Spatially Aware Adjusted Rand Index for Evaluating Spatial Transcritpomics 
     Clustering
-Version: 0.99.0
+Version: 0.99.1
 Authors@R: c(
     person("Yinqiao", "Yan", email = "yinqiaoyan@bjut.edu.cn", role = c("aut", "cre")),
     person("Xiangnan", "Feng", role = "aut"),
@@ -13,7 +13,7 @@ Description: The R package used in the manuscript "Spatially Aware Adjusted Rand
 License: GPL (>= 2)
 Encoding: UTF-8
 Depends: R (>= 4.1.0)
-Imports: Rcpp, stats, parallel, Matrix
+Imports: Rcpp, stats, parallel, Matrix, SpatialExperiment, SummarizedExperiment
 LinkingTo: Rcpp
 LazyData: true
 RoxygenNote: 7.3.2

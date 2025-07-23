@@ -14,6 +14,14 @@
 #' @param alpha_val Parameter in the default functions f and h, which belongs to the open interval (0, 1)
 #'     to keep a positive gap between the maximal weight of the disagreement pair and the weight one of the agreement pair.
 #'     Default is 0.8.
+#' @param spe SpatialExperiment object; stores various components of spatial transcriptomics data, including
+#'     spatialCoords: A matrix containing the spatial coordinates;
+#'     colData$cell_type: Annotated cell type labels for each spot or cell;
+#'     colData$cluster: Clustering labels for each spot or cell.
+#'     Default is NULL.
+#'
+#' @importFrom SummarizedExperiment colData
+#' @importFrom SpatialExperiment spatialCoords
 #'
 #' @return spARI returns an R numeric including the following information.
 #' \item{spRI_value}{numeric, the spRI value calculated by r_labels and c_labels}
@@ -36,7 +44,21 @@
 #' @export
 
 spARI = function(r_labels, c_labels, coords=NULL, dist_mat=NULL,
-                 f_func_input=NULL, h_func_input=NULL, alpha_val=0.8) {
+                 f_func_input=NULL, h_func_input=NULL, alpha_val=0.8,
+                 spe=NULL) {
+
+  if (missing(r_labels) & missing(c_labels) & !is.null(spe)) {
+    ## ST data is input in SpatialExperiment format
+    if (is.null(colData(spe)$cell_type)) {
+      stop("Please store cell type labels in \"colData$cell_type\"")
+    }
+    if (is.null(colData(spe)$cluster)) {
+      stop("Please store clustering labels in \"colData$cluster\"")
+    }
+    coords = spatialCoords(spe)
+    r_labels = colData(spe)$cell_type
+    c_labels = colData(spe)$cluster
+  }
 
   if (length(r_labels) == length(c_labels) &
       length(unique(r_labels)) == 1 &
@@ -67,6 +89,9 @@ spARI = function(r_labels, c_labels, coords=NULL, dist_mat=NULL,
   } else {
     Is_spmat = ("dgCMatrix" %in% class(dist_mat) | "dgTMatrix" %in% class(dist_mat))
   }
+
+  r_labels = match(r_labels, unique(r_labels))
+  c_labels = match(c_labels, unique(c_labels))
 
   n_objects = length(r_labels)
   n_obj_choose = choose(n_objects, 2)

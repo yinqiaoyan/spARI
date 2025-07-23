@@ -804,7 +804,7 @@ dim(dist_mat)</code></pre>
 set.seed(123)
 
 # reference partition
-true_labels = sample(1:K, N, replace = T)
+true_labels = sample(1:K, N, replace = TRUE)
 # clustering partition
 c_labels = true_labels
 ids = sample(which(true_labels == 1), 5000)
@@ -821,7 +821,7 @@ print(res)</code></pre>
 <pre><code>##      spRI     spARI 
 ## 0.9834065 0.8752946</code></pre>
 <pre class="r"><code>print(etime-stime)</code></pre>
-<pre><code>## Time difference of 4.431423 secs</code></pre>
+<pre><code>## Time difference of 6.155725 secs</code></pre>
 </div>
 <div id="conducting-hypothesis-testing" class="section level3" number="3.3">
 <h3><span class="header-section-number">3.3</span> Conducting hypothesis testing</h3>
@@ -829,14 +829,16 @@ print(res)</code></pre>
 <p>First, we import <code>spARI</code> package and load the example data</p>
 <pre class="r"><code>library(spARI)
 data(&quot;spARI_example_data&quot;)</code></pre>
-<p>Then we carry out the permutation test for the clustering partitions “c1_labels” and “c2_labels”.</p>
-<pre class="r"><code>perm_test(r_labels=true_labels, c_labels=c1_labels, coords=coords)</code></pre>
+<p>Then we carry out the permutation test for the clustering partitions “c1_labels” and “c2_labels”. By default, the number of permutations is set to 100.</p>
+<pre class="r"><code>perm_test(r_labels=true_labels, c_labels=c1_labels, coords=coords, 
+          use_parallel=FALSE)</code></pre>
 <pre><code>## spARI_obs   p-value 
 ## 0.6716089 0.0000000</code></pre>
-<pre class="r"><code>perm_test(r_labels=true_labels, c_labels=c2_labels, coords=coords)</code></pre>
+<pre class="r"><code>perm_test(r_labels=true_labels, c_labels=c2_labels, coords=coords, 
+          use_parallel=FALSE)</code></pre>
 <pre><code>## spARI_obs   p-value 
 ##  0.631726  0.000000</code></pre>
-<p>Both the p-values are smaller than a given significance level (e.g., 0.01), indicating that the observed spARI value is significantly larger than zero, and the null hypothesis “spARI=0” is rejected.</p>
+<p>Both the p-values are identical to zero, indicating that the observed spARI value is significantly larger than zero, and the null hypothesis “spARI=0” is rejected.</p>
 </div>
 </div>
 

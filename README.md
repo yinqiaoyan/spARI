@@ -1,6 +1,6 @@
 ## spARI
 
-Current version: 0.99.0 (20250715)
+Current version: 0.99.1 (2025-07-23)
 
 The R package **spARI** is designed to compute two novel clustering evaluation metrics—the **spatially aware Rand index (spRI)** and its adjusted version (**spARI**)—for assessing spatial transcriptomics clustering. Unlike the traditional Rand index (RI) and adjusted Rand index (ARI), spRI and spARI incorporate spatial distance information into clustering evaluation. When comparing two partitions, spRI assigns a weight to each disagreement pair—two objects in the same cluster of one partition but in different clusters of the other—based on their spatial distance, allowing for a more refined distinction between disagreement pairs. The spRI value ranges between zero and one, while the spARI value is less than one with an expected value of zero. Higher spARI values indicate greater clustering accuracy and a more compact spatial structure. 
 
@@ -166,9 +166,10 @@ res = spARI(true_labels, c_labels, dist_mat=dist_mat)
 etime = Sys.time()
 print(res)
 #      spRI     spARI 
-# 0.9940251 0.9550960 
+# 0.9834065 0.8752946
 print(etime-stime)
-# Time difference of 5.503251 secs
+# Time difference of 5.503251 secs 
+# at a MacBook Air powered by Apple M4 CPU with 16GB of RAM
 ```
 
 ### 3. Conducting hypothesis testing
@@ -182,7 +183,7 @@ library(spARI)
 data("spARI_example_data")
 ```
 
-Then we carry out the permutation test for the clustering partitions "c1_labels" and "c2_labels".
+Then we carry out the permutation test for the clustering partitions "c1_labels" and "c2_labels". By default, the number of permutations is set to 100.
 
 ```R
 perm_test(r_labels=true_labels, c_labels=c1_labels, coords=coords)
@@ -194,7 +195,7 @@ perm_test(r_labels=true_labels, c_labels=c2_labels, coords=coords)
 #  0.631726  0.000000 
 ```
 
-Both the p-values are smaller than a given significance level (e.g., 0.01), indicating that the observed spARI value is significantly larger than zero, and the null hypothesis "spARI=0" is rejected.
+Both the p-values are identical to zero, indicating that the observed spARI value is significantly larger than zero, and the null hypothesis "spARI=0" is rejected.
 
 
 

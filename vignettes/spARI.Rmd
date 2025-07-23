@@ -156,11 +156,13 @@ library(spARI)
 data("spARI_example_data")
 ```
 
-Then we carry out the permutation test for the clustering partitions "c1_labels" and "c2_labels".
+Then we carry out the permutation test for the clustering partitions "c1_labels" and "c2_labels". By default, the number of permutations is set to 100.
 
 ```{r}
-perm_test(r_labels=true_labels, c_labels=c1_labels, coords=coords, use_parallel=FALSE)
-perm_test(r_labels=true_labels, c_labels=c2_labels, coords=coords, use_parallel=FALSE)
+perm_test(r_labels=true_labels, c_labels=c1_labels, coords=coords, 
+          use_parallel=FALSE)
+perm_test(r_labels=true_labels, c_labels=c2_labels, coords=coords, 
+          use_parallel=FALSE)
 ```
 
-Both the p-values are smaller than a given significance level (e.g., 0.01), indicating that the observed spARI value is significantly larger than zero, and the null hypothesis "spARI=0" is rejected.
+Both the p-values are identical to zero, indicating that the observed spARI value is significantly larger than zero, and the null hypothesis "spARI=0" is rejected.
