@@ -11,7 +11,11 @@ To implement this package, users are required to input the two partitions, and t
 ## Prerequisites and Installation
 
 1. R version >= 4.1.3
-2. CRAN package: Rcpp, stats, parallel, Matrix
+
+2. CRAN packages: Rcpp, stats, parallel, Matrix
+
+   Bioconductor packages: SpatialExperiment, SummarizedExperiment
+
 3. Install the package `spARI`
 
 ```R
@@ -196,6 +200,68 @@ perm_test(r_labels=true_labels, c_labels=c2_labels, coords=coords)
 ```
 
 Both the p-values are identical to zero, indicating that the observed spARI value is significantly larger than zero, and the null hypothesis "spARI=0" is rejected.
+
+### 4. Use `SpatialExperiment` object as input
+
+The R package is also compatible with `SpatialExperiment` object, which is a commonly used R object to store ST data. 
+
+First, we generate a synthetic ST data stored in `SpatialExperiment` object.
+
+```R
+library(SpatialExperiment)
+library(S4Vectors)
+
+set.seed(123)
+count_matrix <- matrix(
+  sample(0:10, 100, replace = TRUE),
+  nrow = 10,  # 10 genes
+  ncol = 10   # 10 spots
+)
+rownames(count_matrix) <- paste0("gene", 1:10)
+colnames(count_matrix) <- paste0("spot", 1:10)
+
+# Construct gene annotations (rowData)
+gene_annotation <- DataFrame(
+  gene_id = rownames(count_matrix),
+  gene_name = paste0("Gene_", 1:10)
+)
+
+# Construct spot metadata (colData)
+spot_metadata <- DataFrame(
+  spot_id = colnames(count_matrix),
+  sample_id = rep("sample1", 10),
+  cell_type = c(2, 3, 2, 2, 1, 3, 1, 3, 1, 3),
+  cluster = c(2, 3, 2, 3, 1, 3, 3, 3, 1, 3)
+)
+
+# Construct spatial coordinates (spatialCoords)
+coords_matrix <- cbind(
+  x = runif(10, min = 0, max = 100),
+  y = runif(10, min = 0, max = 100)
+)
+rownames(coords_matrix) <- colnames(count_matrix)
+
+# Construct the SpatialExperiment object
+spe <- SpatialExperiment(
+  assays = list(counts = count_matrix),
+  rowData = gene_annotation,
+  colData = spot_metadata,
+  spatialCoords = coords_matrix
+)
+```
+
+Then we use the SpatialExperiment object to calculate the spRI and spARI values and conduct the permutation test.
+
+```R
+spARI(spe=spe)
+##      spRI     spARI 
+## 0.8650783 0.4584890
+
+perm_test(spe=spe, use_parallel=FALSE)
+## spARI_obs   p-value 
+##  0.458489  0.000000
+```
+
 
 
 
