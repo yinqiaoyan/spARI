@@ -253,6 +253,7 @@ spe <- SpatialExperiment(
 Then we use the SpatialExperiment object to calculate the spRI and spARI values and conduct the permutation test.
 
 ```R
+library(spARI)
 spARI(spe=spe)
 ##      spRI     spARI 
 ## 0.8650783 0.4584890
