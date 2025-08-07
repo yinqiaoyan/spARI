@@ -5,6 +5,9 @@
 \title{True Labels of Simulated Objects}
 \format{
 An integer vector.
+\describe{
+  \item{true_labels}{Ground-truth labels of 160 spots}
+}
 }
 \description{
 A manually generated true labels.

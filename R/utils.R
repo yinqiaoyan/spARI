@@ -4,23 +4,6 @@
 NULL
 
 
-#' Data: spARI_example_data
-#'
-#' spARI_example_data contains the following items:
-#' @format A RData file:
-#' \describe{
-#'   \item{true_labels}{ground truth of 160 spots (input as r_labels)}
-#'   \item{c1_labels}{one partition results of these spots (input as c_labels)}
-#'   \item{c2_labels}{another partition results of these spots (input as c_labels)}
-#'   \item{coords}{spatial coordinates of these spots (2 columns)}
-#' }
-#'
-#' @name spARI_example_data
-#' @docType data
-#' @usage data(spARI_example_data)
-NULL
-
-
 #' Coordinates of Simulated Objects
 #'
 #' A simulated dataset containing spatial coordinates.
@@ -37,7 +20,9 @@ NULL
 #'
 #' A manually generated true labels.
 #' @format An integer vector.
-#' @value An integer vector containing the ground truth cluster labels for a simulated dataset.
+#' \describe{
+#'   \item{true_labels}{Ground-truth labels of 160 spots}
+#' }
 #'
 #' @name true_labels
 NULL
@@ -47,7 +32,9 @@ NULL
 #'
 #' A manually generated clustering labels.
 #' @format An integer vector.
-#' @value An integer vector containing the first clustering result.
+#' \describe{
+#'   \item{c1_labels}{First clustering result to compare}
+#' }
 #'
 #' @name c1_labels
 NULL
@@ -57,7 +44,9 @@ NULL
 #'
 #' Another manually generated clustering labels.
 #' @format An integer vector.
-#' @value An integer vector containing the second clustering result.
+#' \describe{
+#'   \item{c2_labels}{Second clustering result to compare}
+#' }
 #'
 #' @name c2_labels
 NULL

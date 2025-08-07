@@ -5,6 +5,9 @@
 \title{Clustering Labels of Simulated Objects}
 \format{
 An integer vector.
+\describe{
+  \item{c1_labels}{First clustering result to compare}
+}
 }
 \description{
 A manually generated clustering labels.

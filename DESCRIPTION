@@ -2,7 +2,7 @@ Package: spARI
 Type: Package
 Title: Spatially Aware Adjusted Rand Index for Evaluating Spatial Transcritpomics 
     Clustering
-Version: 0.99.5
+Version: 0.99.6
 Authors@R: c(
     person("Yinqiao", "Yan", email = "yinqiaoyan@bjut.edu.cn", role = c("aut", "cre")),
     person("Xiangnan", "Feng", role = c("aut", "fnd")),

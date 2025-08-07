@@ -1,3 +1,7 @@
+# spARI 0.99.6 (2025-08-07)
+
+- Updated `utils.R` file
+
 # spARI 0.99.5 (2025-08-07)
 
 - Addressed code styling suggestions (replaced `1:n` by `seq_len()`, replaced `sapply` by `vapply`)
