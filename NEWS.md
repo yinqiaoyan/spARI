@@ -1,16 +1,20 @@
-# spARI 0.99.4 (2025-08-07)
+# spARI 0.99.5 (2025-08-07)
 
 - Addressed code styling suggestions (replaced `1:n` by `seq_len()`, replaced `sapply` by `vapply`)
 - Removed usage of `set.seed()` in package code
 - Added missing `\value{}` sections in man pages
 
-# spARI 0.99.3 (2025-08-07)
+# spARI 0.99.4 (2025-08-07)
 
 - Removed `.DS_Store` files in the package
 
-# spARI 0.99.2 (2025-08-07)
+# spARI 0.99.3 (2025-08-07)
 
 - Updated the Readme file
+
+# spARI 0.99.2 (2025-08-07)
+
+- Subscribed to the Bioc-devel mailing list
 
 # spARI 0.99.1 (2025-07-23)
 
