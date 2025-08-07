@@ -1,0 +1,18 @@
+# macOS system files
+.DS_Store
+**/.DS_Store
+
+# R build files
+.Rhistory
+.RData
+.Rproj.user/
+.Ruserdata
+
+# Build artifacts
+.Rcheck/
+*.tar.gz
+
+# Vignettes
+vignettes/*.html
+vignettes/*.pdf
+
