@@ -37,6 +37,7 @@ NULL
 #'
 #' A manually generated true labels.
 #' @format An integer vector.
+#' @value An integer vector containing the ground truth cluster labels for a simulated dataset.
 #'
 #' @name true_labels
 NULL
@@ -46,6 +47,7 @@ NULL
 #'
 #' A manually generated clustering labels.
 #' @format An integer vector.
+#' @value An integer vector containing the first clustering result.
 #'
 #' @name c1_labels
 NULL
@@ -55,6 +57,7 @@ NULL
 #'
 #' Another manually generated clustering labels.
 #' @format An integer vector.
+#' @value An integer vector containing the second clustering result.
 #'
 #' @name c2_labels
 NULL

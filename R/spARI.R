@@ -132,8 +132,8 @@ spARI = function(r_labels, c_labels, coords=NULL, dist_mat=NULL,
   K_C = length(unique_value_c)
 
   nij_record = matrix(NA, nrow = K_R, ncol = K_C)
-  for (rr in 1:K_R) {
-    for (cc in 1:K_C) {
+  for (rr in seq_len(K_R)) {
+    for (cc in seq_len(K_C)) {
       tmp_rr = r_labels == unique_value_r[rr]
       tmp_cc = c_labels == unique_value_c[cc]
       nij_record[rr, cc] = sum(tmp_rr & tmp_cc)

@@ -97,7 +97,7 @@ perm_test = function(r_labels, c_labels, coords=NULL, dist_mat=NULL,
     parallel::clusterSetRNGStream(cl, iseed = random_seed)
 
     spARI_sim_record <- parallel::parLapply(
-      cl, 1:replicate_times,
+      cl, seq_len(replicate_times),
       fun = function(i, r_labels, c_labels, dist_mat, f_func_input, h_func_input, alpha_val) {
         r_labels_perm <- sample(r_labels)
         c_labels_perm <- sample(c_labels)
@@ -111,14 +111,15 @@ perm_test = function(r_labels, c_labels, coords=NULL, dist_mat=NULL,
     parallel::stopCluster(cl)
     spARI_sim_record <- unlist(spARI_sim_record)
   } else {
-    set.seed(random_seed)
-    spARI_sim_record <- sapply(1:replicate_times, function(i) {
+    # set.seed(random_seed)
+    spARI_sim_record <- vapply(seq_len(replicate_times), function(i) {
       r_labels_perm <- sample(r_labels)
       c_labels_perm <- sample(c_labels)
-      spARI(r_labels_perm, c_labels_perm, dist_mat = dist_mat,
-            f_func_input = f_func_input, h_func_input = h_func_input,
-            alpha_val = alpha_val)[2]
-    })
+      spARI_val = spARI(r_labels_perm, c_labels_perm, dist_mat = dist_mat,
+                        f_func_input = f_func_input, h_func_input = h_func_input,
+                        alpha_val = alpha_val)[2]
+      return(spARI_val)
+    }, FUN.VALUE = numeric(1))
   }
 
   # compute p value
