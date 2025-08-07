@@ -4,51 +4,28 @@
 NULL
 
 
-#' Coordinates of Simulated Objects
+#' Example data for spARI
 #'
-#' A simulated dataset containing spatial coordinates.
-#'
-#' @format A data frame with 2 columns:
-#' \describe{
-#'   \item{X_coord}{x-coordinate}
-#'   \item{Y_coord}{y-coordinate}
-#' }
-#' @name coords
-NULL
-
-#' True Labels of Simulated Objects
-#'
-#' A manually generated true labels.
-#' @format An integer vector.
-#' \describe{
-#'   \item{true_labels}{Ground-truth labels of 160 spots}
+#' This dataset includes simulated spatial clustering results for demonstration purposes.
+#' It contains the following objects:
+#' \itemize{
+#'   \item \code{true_labels}: Ground-truth labels of 160 spots.
+#'   \item \code{c1_labels}: First clustering result to compare.
+#'   \item \code{c2_labels}: Second clustering result to compare.
+#'   \item \code{coords}: Spatial coordinates (matrix with 2 columns).
 #' }
 #'
-#' @name true_labels
-NULL
-
-
-#' Clustering Labels of Simulated Objects
-#'
-#' A manually generated clustering labels.
-#' @format An integer vector.
+#' @docType data
+#' @keywords datasets
+#' @name spARI_example_data
+#' @usage data(spARI_example_data)
+#' @format An environment containing 4 objects:
 #' \describe{
-#'   \item{c1_labels}{First clustering result to compare}
+#'   \item{true_labels}{Numeric or factor vector of length 160.}
+#'   \item{c1_labels}{Numeric or factor vector of length 160.}
+#'   \item{c2_labels}{Numeric or factor vector of length 160.}
+#'   \item{coords}{Numeric matrix of size 160x2.}
 #' }
-#'
-#' @name c1_labels
-NULL
-
-
-#' Clustering Labels of Simulated Objects
-#'
-#' Another manually generated clustering labels.
-#' @format An integer vector.
-#' \describe{
-#'   \item{c2_labels}{Second clustering result to compare}
-#' }
-#'
-#' @name c2_labels
 NULL
 
 

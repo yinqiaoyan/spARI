@@ -5,7 +5,7 @@ output:
   BiocStyle::html_document:
     toc: true
     toc_depth: 2
-date: "2025-07-23"
+date: "2025-07-15"
 vignette: >
   %\VignetteIndexEntry{An Introduction to spARI}
   %\VignetteEngine{knitr::rmarkdown}
@@ -18,9 +18,9 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Introduction
 
-The R package **spARI** is designed to compute two novel clustering evaluation metrics—the **spatially aware Rand index (spRI)** and its adjusted version (**spARI**)—for assessing spatial transcriptomics clustering. Unlike the traditional Rand index (RI) and adjusted Rand index (ARI), spRI and spARI incorporate spatial distance information into clustering evaluation. When comparing two partitions, spRI assigns a weight to each disagreement pair—two objects in the same cluster of one partition but in different clusters of the other—based on their spatial distance, allowing for a more refined distinction between disagreement pairs. The spRI value ranges between zero and one, while the spARI value is less than one with an expected value of zero. Higher spARI values indicate greater clustering accuracy and a more compact spatial structure. 
+The R package **spARI** is designed to compute two novel clustering evaluation metrics—the **spatially aware Rand index (spRI)** and its adjusted version (**spARI**)—for assessing spatial transcriptomics clustering. Unlike the traditional Rand index (RI) and adjusted Rand index (ARI), spRI and spARI incorporate spatial distance information into clustering evaluation. When comparing two partitions, spRI assigns a weight to each disagreement pair—two objects in the same cluster of one partition but in different clusters of the other—based on their spatial distance, allowing for a more refined distinction between disagreement pairs. The spRI value ranges between zero and one, and the spARI value is less than or equal to one with an expected value of zero.  
 
-To implement this package, users are required to input the two partitions, and to optionally provide either the spatial coordinates or the distance matrix. The main function "spARI" then automatically computes spRI and spARI in a fast and user-friendly manner. If spatial coordinates are provided, a built-in normalization step is applied to remove the effect of spatial location unit. For large-scale spatial data (e.g., 100,000 objects), users can input a sparse distance matrix of class "dgCMatrix" or "dgTMatrix", for instance, by retaining only distances to the $k$ nearest neighbors for each object. The `spARI` package is compatible with Windows, Linux, and macOS, and can be easily installed on all three platforms.
+To implement this package, users are required to input two partitions and either spatial coordinates or a precomputed distance matrix. The main function "spARI" then automatically computes spRI and spARI in a fast and user-friendly manner. If spatial coordinates are provided, a built-in normalization step is applied to remove the effect of spatial location unit. If a distance matrix is provided, for large-scale spatial data (e.g., 100,000 objects), users can input a sparse distance matrix of class "dgCMatrix" or "dgTMatrix", for instance, by retaining only distances to the $k$ nearest neighbors for each object. The `spARI` package is compatible with Windows, Linux, and macOS, and can be easily installed on all three platforms.
 
 ## Installation
 
@@ -47,6 +47,10 @@ Import the `spARI` package and load the example data stored in this package.
 ```{r}
 library(spARI)
 data("spARI_example_data")
+true_labels = spARI_example_data$true_labels
+c1_labels = spARI_example_data$c1_labels
+c2_labels = spARI_example_data$c2_labels
+coords = spARI_example_data$coords
 ```
 
 Run "spARI" function to compute spRI and spARI.
@@ -154,6 +158,10 @@ First, we import `spARI` package and load the example data
 ```{r}
 library(spARI)
 data("spARI_example_data")
+true_labels = spARI_example_data$true_labels
+c1_labels = spARI_example_data$c1_labels
+c2_labels = spARI_example_data$c2_labels
+coords = spARI_example_data$coords
 ```
 
 Then we carry out the permutation test for the clustering partitions "c1_labels" and "c2_labels". By default, the number of permutations is set to 100.

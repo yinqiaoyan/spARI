@@ -60,6 +60,10 @@ library(spARI)
 # (3) c2_labels: another partition results of these spots (input as c_labels)
 # (4) coords: spatial coordinates of these spots (2 columns)
 data(spARI_example_data)
+true_labels = spARI_example_data$true_labels
+c1_labels = spARI_example_data$c1_labels
+c2_labels = spARI_example_data$c2_labels
+coords = spARI_example_data$coords
 ### --- Compute spRI and spARI --- ###
 res1 = spARI(r_labels=true_labels, c_labels=c1_labels, coords=coords)
 res2 = spARI(r_labels=true_labels, c_labels=c2_labels, coords=coords)

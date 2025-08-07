@@ -64,7 +64,13 @@ The function perm_test is the main function to carry out the hypothesis test pro
 \examples{
 library(spARI)
 data(spARI_example_data)
-test_res1 = perm_test(true_labels, c1_labels, coords, use_parallel=FALSE)
-test_res2 = perm_test(true_labels, c2_labels, coords, use_parallel=FALSE)
+true_labels = spARI_example_data$true_labels
+c1_labels = spARI_example_data$c1_labels
+c2_labels = spARI_example_data$c2_labels
+coords = spARI_example_data$coords
+test_res1 = perm_test(r_labels=true_labels, c_labels=c1_labels, coords=coords,
+                      use_parallel=FALSE)
+test_res2 = perm_test(r_labels=true_labels, c_labels=c2_labels, coords=coords,
+                      use_parallel=FALSE)
 
 }

@@ -1,3 +1,7 @@
+# spARI 0.99.7 (2025-08-07)
+
+- Converted `spARI_example_data` into a list object
+
 # spARI 0.99.6 (2025-08-07)
 
 - Updated `utils.R` file

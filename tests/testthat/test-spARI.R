@@ -1,6 +1,10 @@
 test_that("spARI runs correctly and returns expected structure", {
   # load data
   data("spARI_example_data", package = "spARI")
+  true_labels = spARI_example_data$true_labels
+  c1_labels = spARI_example_data$c1_labels
+  c2_labels = spARI_example_data$c2_labels
+  coords = spARI_example_data$coords
   coords_norm = coords
   coords_norm[,1] = (coords[,1] - min(coords[,1])) / (max(coords[,1]) - min(coords[,1]))
   coords_norm[,2] = (coords[,2] - min(coords[,2])) / (max(coords[,2]) - min(coords[,2]))
