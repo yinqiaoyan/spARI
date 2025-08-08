@@ -4,7 +4,15 @@ Current version: 0.99.3 (2025-08-07)
 
 The R package **spARI** is designed to compute two novel clustering evaluation metrics—the **spatially aware Rand index (spRI)** and its adjusted version (**spARI**)—for assessing spatial transcriptomics clustering. Unlike the traditional Rand index (RI) and adjusted Rand index (ARI), spRI and spARI incorporate spatial distance information into clustering evaluation. When comparing two partitions, spRI assigns a weight to each disagreement pair—two objects in the same cluster of one partition but in different clusters of the other—based on their spatial distance, allowing for a more refined distinction between disagreement pairs. The spRI value ranges between zero and one, and the spARI value is less than or equal to one with an expected value of zero.  
 
-To implement this package, users are required to input two partitions and either spatial coordinates or a precomputed distance matrix. The main function "spARI" then automatically computes spRI and spARI in a fast and user-friendly manner. If spatial coordinates are provided, a built-in normalization step is applied to remove the effect of spatial location unit. If a distance matrix is provided, for large-scale spatial data (e.g., 100,000 objects), users can input a sparse distance matrix of class "dgCMatrix" or "dgTMatrix", for instance, by retaining only distances to the $k$ nearest neighbors for each object. The `spARI` package is compatible with Windows, Linux, and macOS, and can be easily installed on all three platforms.
+To implement this package, users are required to input two partitions and either spatial coordinates or a precomputed distance matrix. The main function "spARI" then automatically computes spRI and spARI in a fast and user-friendly manner. 
+
+* If spatial coordinates are provided, a built-in normalization step is applied to remove the effect of spatial location unit. 
+
+* If a distance matrix is provided, the built-in distance matrix calculation step is skipped.
+
+* For large-scale spatial data (e.g., 100,000 objects), users can input a sparse distance matrix of class "dgCMatrix" or "dgTMatrix", for instance, by retaining only distances to the $k$ nearest neighbors for each object. 
+
+The `spARI` package is compatible with Windows, Linux, and macOS, and can be easily installed on all three platforms.
 
 
 
@@ -37,7 +45,9 @@ The data description is given in the following table.
 
 ## Example Code
 
-### 1. Compute spRI and spARI using spatial coordinates
+### 1. Compute spRI and spARI 
+
+#### 1.1. Use spatial coordinates as input
 
 The following code shows an example (the third simulation study in the manuscript) that runs the main function "spARI" in our package.
 
@@ -64,7 +74,8 @@ Run "spARI" function to compute spRI and spARI. The meaning of each argument in 
 * c_labels: the clustering partition
 * coords: spatial coordinates of all the objects. Default is NULL
 * dist_mat: distance matrix calculated by users. Default is NULL
-* Is_spmat: a logical value indicating whether "dist_mat" is a sparse matrix. Default is FALSE
+* f_func_input: function f provided by users. Default is NULL
+* h_func_input: function h provided by users. Default is NULL
 * alpha_val: coefficient belongs to the open interval (0, 1) to keep a positive gap between the maximal weight of the disagreement pair and the weight one of the agreement pair. Default is 0.8
 
 ```R
@@ -81,11 +92,35 @@ example("spARI")
 # 2nd clustering partition: spRI=0.917, spARI=0.632
 ```
 
-### 2. Compute spRI and spARI using sparse distance matrix
+#### 1.2. Use a distance matrix as input
+
+The following code shows an example that runs the main function "spARI" using the distance matrix as input.
+
+```R
+library(spARI)
+data("spARI_example_data")
+
+## Compute the distance matrix
+coords_norm = coords
+coords_norm[,1] = (coords[,1] - min(coords[,1])) / (max(coords[,1]) - min(coords[,1]))
+coords_norm[,2] = (coords[,2] - min(coords[,2])) / (max(coords[,2]) - min(coords[,2]))
+dist_mat = as.matrix(stats::dist(coords_norm))
+```
+
+Run "spARI" function to compute spRI and spARI using `dist_mat`.
+
+```R
+res_value1 = spARI(r_labels=true_labels, c_labels=c1_labels, dist_mat=dist_mat)
+res_value2 = spARI(r_labels=true_labels, c_labels=c2_labels, dist_mat=dist_mat)
+```
+
+The computation yields identical results to those obtained when using coordinates as input.
+
+#### 1.3. Use a sparse distance matrix as input
 
 In this example, we generate two partitions for 100,000 objects with simulated spatial coordinates to examine the computational efficiency of the `spARI` package for large-scale spatial data.
 
-Since storing a dense matrix of 100,000$\times$100,000 would require more than 16GB of memory, we generate a sparse distance matrix of the objects. 
+Since storing a dense matrix of 100,000x100,000 would require more than 16GB of memory, we generate a sparse distance matrix of the objects. 
 
 ```R
 ## Install FNN package
@@ -176,7 +211,7 @@ print(etime-stime)
 # at a MacBook Air powered by Apple M4 CPU with 16GB of RAM
 ```
 
-### 3. Conducting hypothesis testing
+### 2. Conducting hypothesis testing
 
 We conduct the permutation test for the observed spARI value of the two clustering partitions in the example data. 
 
@@ -201,7 +236,7 @@ perm_test(r_labels=true_labels, c_labels=c2_labels, coords=coords)
 
 Both the p-values are identical to zero, indicating that the observed spARI value is significantly larger than zero, and the null hypothesis "spARI=0" is rejected.
 
-### 4. Use `SpatialExperiment` object as input
+### 3. Support for `SpatialExperiment` objects
 
 The R package is also compatible with `SpatialExperiment` object, which is a commonly used R object to store ST data. 
 
