@@ -74,8 +74,8 @@ Run "spARI" function to compute spRI and spARI. The meaning of each argument in 
 * c_labels: the clustering partition
 * coords: spatial coordinates of all the objects. Default is NULL
 * dist_mat: distance matrix calculated by users. Default is NULL. At least one of coords or dist_mat must be provided (i.e., not NULL)
-* f_func_input: function f provided by users. Default is NULL, which corresponds to $f(t) = \alpha \exp\{-t^2\}$
-* h_func_input: function h provided by users. Default is NULL, which corresponds to $h(t) = \alpha(1 - \exp\{-t^2\})$
+* f_func_input: function f provided by users. Default is NULL, which corresponds to $f(t) = \alpha \exp(-t^2)$
+* h_func_input: function h provided by users. Default is NULL, which corresponds to $h(t) = \alpha(1 - \exp(-t^2))$
 * alpha_val: coefficient belongs to the open interval (0, 1) to keep a positive gap between the maximal weight of the disagreement pair and the weight one of the agreement pair. Default is 0.8
 * spe: SpatialExperiment object provided by users. Default is NULL
 
