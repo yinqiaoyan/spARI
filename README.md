@@ -1,6 +1,6 @@
 ## spARI
 
-Current version: 0.99.3 (2025-08-07)  
+Current version: 1.0 (2025-08-08)  
 
 The R package **spARI** is designed to compute two novel clustering evaluation metrics—the **spatially aware Rand index (spRI)** and its adjusted version (**spARI**)—for assessing spatial transcriptomics clustering. Unlike the traditional Rand index (RI) and adjusted Rand index (ARI), spRI and spARI incorporate spatial distance information into clustering evaluation. When comparing two partitions, spRI assigns a weight to each disagreement pair—two objects in the same cluster of one partition but in different clusters of the other—based on their spatial distance, allowing for a more refined distinction between disagreement pairs. The spRI value ranges between zero and one, and the spARI value is less than or equal to one with an expected value of zero.  
 
@@ -73,9 +73,9 @@ Run "spARI" function to compute spRI and spARI. The meaning of each argument in 
 * r_labels: the reference partition
 * c_labels: the clustering partition
 * coords: spatial coordinates of all the objects. Default is NULL
-* dist_mat: distance matrix calculated by users. Default is NULL
-* f_func_input: function f provided by users. Default is NULL
-* h_func_input: function h provided by users. Default is NULL
+* dist_mat: distance matrix calculated by users. Default is NULL. At least one of coords or dist_mat must be provided (i.e., not NULL)
+* f_func_input: function f provided by users. Default is NULL, which corresponds to $f(t) = \alpha \exp\{-t^2\}$
+* h_func_input: function h provided by users. Default is NULL, which corresponds to $h(t) = \alpha(1 - \exp\{-t^2\})$
 * alpha_val: coefficient belongs to the open interval (0, 1) to keep a positive gap between the maximal weight of the disagreement pair and the weight one of the agreement pair. Default is 0.8
 * spe: SpatialExperiment object provided by users. Default is NULL
 
