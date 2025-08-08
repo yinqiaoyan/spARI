@@ -27,11 +27,12 @@ spARI(
 \item{dist_mat}{Distance matrix provided by users. If both coords and dist_mat
 are provided, we will directly use the distance matrix. Default is NULL.
 Please notice that if dist_mat is sparse, the weight function for object pairs without recorded distances
-degenerates to the setting used in the classical Rand index.}
+degenerates to the setting used in the classical Rand index.
+At least one of coords or dist_mat must be provided (i.e., not NULL).}
 
-\item{f_func_input}{R function; function f provided by users.}
+\item{f_func_input}{R function; function f provided by users. Default is NULL, which corresponds to \eqn{f(t) = \alpha \exp(-t^2)}.}
 
-\item{h_func_input}{R function; function h provided by users.}
+\item{h_func_input}{R function; function h provided by users. Default is NULL, which corresponds to \eqn{h(t) = \alpha(1 - \exp(-t^2))}.}
 
 \item{alpha_val}{Parameter in the default functions f and h, which belongs to the open interval (0, 1)
 to keep a positive gap between the maximal weight of the disagreement pair and the weight one of the agreement pair.
