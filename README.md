@@ -77,6 +77,7 @@ Run "spARI" function to compute spRI and spARI. The meaning of each argument in 
 * f_func_input: function f provided by users. Default is NULL
 * h_func_input: function h provided by users. Default is NULL
 * alpha_val: coefficient belongs to the open interval (0, 1) to keep a positive gap between the maximal weight of the disagreement pair and the weight one of the agreement pair. Default is 0.8
+* spe: SpatialExperiment object provided by users. Default is NULL
 
 ```R
 res_value1 = spARI(r_labels=true_labels, c_labels=c1_labels, coords=coords)
