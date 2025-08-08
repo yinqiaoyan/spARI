@@ -9,8 +9,9 @@
 #'     are provided, we will directly use the distance matrix. Default is NULL.
 #'     Please notice that if dist_mat is sparse, the weight function for object pairs without recorded distances
 #'     degenerates to the setting used in the classical Rand index.
-#' @param f_func_input R function; function f provided by users.
-#' @param h_func_input R function; function h provided by users.
+#'     At least one of coords or dist_mat must be provided (i.e., not NULL)
+#' @param f_func_input R function; function f provided by users. Default is NULL, which corresponds to \eqn{f(t) = \alpha \exp(-t^2)}.
+#' @param h_func_input R function; function h provided by users. Default is NULL, which corresponds to \eqn{h(t) = \alpha(1 - \exp(-t^2))}.
 #' @param alpha_val Parameter in the default functions f and h, which belongs to the open interval (0, 1)
 #'     to keep a positive gap between the maximal weight of the disagreement pair and the weight one of the agreement pair.
 #'     Default is 0.8.
@@ -18,10 +19,10 @@
 #' @param replicate_times Number of permutations for both the reference and clustering partitions. Default is 100.
 #' @param random_seed Random seed for reproducibility. Default is 42.
 #' @param spe SpatialExperiment object; stores various components of spatial transcriptomics data, including
-#' spatialCoords: A matrix containing the spatial coordinates;
-#' colData$cell_type: Annotated cell type labels for each spot or cell;
-#' colData$cluster: Clustering labels for each spot or cell.
-#' Default is NULL.
+#'     spatialCoords: A matrix containing the spatial coordinates;
+#'     colData$cell_type: Annotated cell type labels for each spot or cell;
+#'     colData$cluster: Clustering labels for each spot or cell.
+#'     Default is NULL.
 #'
 #' @importFrom SummarizedExperiment colData
 #' @importFrom SpatialExperiment spatialCoords
