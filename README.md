@@ -178,7 +178,9 @@ length(dist_mat@x)
 # 595850  # number of non-zero elements (0.006% of total N^2 elements)
 ```
 
-**Remark.** For each object, we initially retain only the distances to its $k=5$ nearest neighbors (recorded entries in the distance matrix). However, since the $k$-nearest neighbor relationship is not symmetric (i.e., object $i$ may be among the $k$ nearest neighbors of object $j$, but $j$ is not necessarily among the $k$ nearest neighbors of $i$), the resulting matrix $D_{\text{temp}}$ is asymmetric. To ensure symmetry, we include the distance between two objects if either one is among the $k$ nearest neighbors of the other.
+**Remark1.** The sparse matrix should be stored in the R classes "dgCMatrix" or "dgTMatrix".
+
+**Remark2.** For each object, we initially retain only the distances to its $k=5$ nearest neighbors (recorded entries in the distance matrix). However, since the $k$-nearest neighbor relationship is not symmetric (i.e., object $i$ may be among the $k$ nearest neighbors of object $j$, but $j$ is not necessarily among the $k$ nearest neighbors of $i$), the resulting matrix $D_{\text{temp}}$ is asymmetric. To ensure symmetry, we include the distance between two objects if either one is among the $k$ nearest neighbors of the other.
 
 Then we generate the synthetic reference and clustering partitions, with the clustering result containing 10,000 misclustered objects.
 
