@@ -160,8 +160,8 @@ spARI = function(r_labels, c_labels, coords=NULL, dist_mat=NULL,
     sum_h_vals_total = sum(h_func(nonzero_vec))
   } else {
     dist_mat_Lvec = dist_mat[lower.tri(dist_mat, diag = FALSE)]
-    sum_f_vals_total = sum(f_func(dist_mat_Lvec))
-    sum_h_vals_total = sum(h_func(dist_mat_Lvec))
+    sum_f_vals_total = sum(f_func(dist_mat_Lvec[dist_mat_Lvec != 0]))
+    sum_h_vals_total = sum(h_func(dist_mat_Lvec[dist_mat_Lvec != 0]))
   }
 
 
