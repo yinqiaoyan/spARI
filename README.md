@@ -182,7 +182,7 @@ length(dist_mat@x)
 
 **Remark2.** For each object, we initially retain only the distances to its $k=5$ nearest neighbors (recorded entries in the distance matrix). However, since the $k$-nearest neighbor relationship is not symmetric (i.e., object $i$ may be among the $k$ nearest neighbors of object $j$, but $j$ is not necessarily among the $k$ nearest neighbors of $i$), the resulting matrix $D_{\text{temp}}$ is asymmetric. To ensure symmetry, we include the distance between two objects if either one is among the $k$ nearest neighbors of the other. 
 
-**Remark3.** For object pairs whose distances are not stored in the sparse matrix, the values of weight function $\widetilde{W}$ are set to one if they form an agreement pair and zero if they form a disagreement pair.
+**Remark3.** For object pairs whose distances are empty (i.e., not recorded) in the sparse matrix, their corresponding values of the weights $\widetilde{W}(i,j)$'s in spRI/spARI are set to **zero** if they form a disagreement pair and still to one if they form an agreement pair. In addition, if we denote the set of cell pairs with recorded distances by $\Xi$, then $F=\sum_{(i,j) \in \Xi}f_{ij}$ and $H=\sum_{(i,j) \in \Xi}h_{ij}$ for the sparse distance matrix situation.
 
 Then we generate the synthetic reference and clustering partitions, with the clustering result containing 10,000 misclustered objects.
 
