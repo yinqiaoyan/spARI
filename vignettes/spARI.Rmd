@@ -13,21 +13,29 @@ vignette: >
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, fig.align = "center")
 ```
 
 ## Introduction
 
 The R package **spARI** is designed to compute two novel clustering evaluation metrics—the **spatially aware Rand index (spRI)** and its adjusted version (**spARI**)—for assessing spatial transcriptomics clustering. Unlike the traditional Rand index (RI) and adjusted Rand index (ARI), spRI and spARI incorporate spatial distance information into clustering evaluation. When comparing two partitions, spRI assigns a weight to each disagreement pair—two objects in the same cluster of one partition but in different clusters of the other—based on their spatial distance, allowing for a more refined distinction between disagreement pairs. The spRI value ranges between zero and one, and the spARI value is less than or equal to one with an expected value of zero.  
 
-To implement this package, users are required to input two partitions and either spatial coordinates or a precomputed distance matrix. The main function "spARI" then automatically computes spRI and spARI in a fast and user-friendly manner. If spatial coordinates are provided, a built-in normalization step is applied to remove the effect of spatial location unit. If a distance matrix is provided, for large-scale spatial data (e.g., 100,000 objects), users can input a sparse distance matrix of class "dgCMatrix" or "dgTMatrix", for instance, by retaining only distances to the $k$ nearest neighbors for each object. The `spARI` package is compatible with Windows, Linux, and macOS, and can be easily installed on all three platforms.
+To implement this package, users are required to input two partitions and either spatial coordinates or a precomputed distance matrix. The main function "spARI" then automatically computes spRI and spARI in a fast and user-friendly manner. 
+
+* If spatial coordinates are provided, a built-in normalization step is applied to remove the effect of spatial location unit. 
+
+* If a distance matrix is provided, the built-in distance matrix calculation step is skipped.
+
+* For large-scale spatial data (e.g., 100,000 objects), users can input a sparse distance matrix of class "dgCMatrix" or "dgTMatrix", for instance, by retaining only distances to the $k$ nearest neighbors for each object. 
+
+The `spARI` package is compatible with Windows, Linux, and macOS, and can be easily installed on all three platforms.
 
 ## Installation
 
 Users can install the `spARI` package from GitHub.
 
 ```{r install, eval=FALSE}
-devtools::install_github("yinqiaoyan/spARI")
+devtools::install_github("yinqiaoyan/spARI", dependencies = TRUE)
 ```
 
 Other required packages also need to be installed in advance.
@@ -36,39 +44,124 @@ Other required packages also need to be installed in advance.
 install.packages("FNN")  # find k-nearest neighbors
 ```
 
-## Examples of using the package
+## Example Code
 
-### Compute spRI and spARI using the spatial coordinates
+### Compute spRI and spARI 
 
-The following code shows an example that runs the main function "spARI" in our package.
+#### Use spatial coordinates as input
 
-Import the `spARI` package and load the example data stored in this package.
+The following code shows an example (the third simulation study in the manuscript) that runs the main function "spARI" in our package.
+
+Import the required R package.
+
+```{r}
+library(spARI)
+```
+
+Load the example data stored in this package. The example data includes:
+
+* true_labels: the reference partition
+* c1_labels: the first clustering partition
+* c2_labels: the second clustering partition
+* coords: spatial coordinates of all the objects
+
+```{r}
+data("spARI_example_data")
+true_labels <- spARI_example_data$true_labels
+c1_labels <- spARI_example_data$c1_labels
+c2_labels <- spARI_example_data$c2_labels
+coords <- spARI_example_data$coords
+```
+
+Run "spARI" function to compute spRI and spARI. The meaning of each argument in the main function is listed below.
+
+* r_labels: the reference partition
+* c_labels: the clustering partition
+* coords: spatial coordinates of all the objects. Default is NULL
+* dist_mat: distance matrix calculated by users. Default is NULL. At least one of coords or dist_mat must be provided (i.e., not NULL)
+* f_func_input: function f provided by users. Default is NULL, which corresponds to $f(t) = \alpha \exp(-t^2)$
+* h_func_input: function h provided by users. Default is NULL, which corresponds to $h(t) = \alpha(1 - \exp(-t^2))$
+* alpha_val: coefficient belongs to the open interval (0, 1) to keep a positive gap between the maximal weight of the disagreement pair and the weight one of the agreement pair. Default is 0.8
+* spe: SpatialExperiment object provided by users. Default is NULL
+
+```{r}
+res_value1 <- spARI(r_labels=true_labels, c_labels=c1_labels, coords=coords)
+res_value2 <- spARI(r_labels=true_labels, c_labels=c2_labels, coords=coords)
+print(res_value1)
+print(res_value2)
+```
+
+The reference partition and the two clustering partitions are shown in the following figure.
+
+```{r}
+cols <- c("#D27786","#A5D7F1","#c599f3","#ffb610") 
+par(mfrow=c(1,3), mar=c(3,3,1,1))
+plot(coords[, 1], coords[, 2], col=cols[true_labels], pch=16, main="Reference")
+plot(coords[, 1], coords[, 2], col=cols[c1_labels], pch=16, main="Clustering i")
+plot(coords[, 1], coords[, 2], col=cols[c2_labels], pch=16, main="Clustering ii")
+```
+
+It can be seen that spRI and spARI prefer clustering partitions with more compact spatial structures.
+
+Finally, we provide a scenario where the differences of spRI/spARI between two clustering partitions are noticeably large.
+
+```{r}
+set.seed(1)
+coords <- data.frame(x = c(runif(30,0,1), runif(30,1.2,2.2)),
+                     y = runif(60,0,1))
+# reference
+ref <- c(rep(1,30), rep(2,30))
+# clustering A
+cluA <- sample(ref)
+# clustering B
+cluB <- ref
+
+par(mfrow=c(1,2), mar=c(3,3,1,1))
+plot(coords$x, coords$y, col=cluA, pch=16, main="Clustering A (lower spRI/spARI)")
+plot(coords$x, coords$y, col=cluB, pch=16, main="Clustering B (higher spRI/spARI)")
+
+# compute spRI and spARI
+res_A <- spARI(ref, cluA, coords = as.matrix(coords))
+res_B <- spARI(ref, cluB, coords = as.matrix(coords))
+print(res_A)
+print(res_B)
+```
+
+#### Use a distance matrix as input
+
+The following code shows an example that runs the main function "spARI" using the distance matrix as input.
 
 ```{r}
 library(spARI)
 data("spARI_example_data")
-true_labels = spARI_example_data$true_labels
-c1_labels = spARI_example_data$c1_labels
-c2_labels = spARI_example_data$c2_labels
-coords = spARI_example_data$coords
+true_labels <- spARI_example_data$true_labels
+c1_labels <- spARI_example_data$c1_labels
+c2_labels <- spARI_example_data$c2_labels
+coords <- spARI_example_data$coords
+
+## Compute the distance matrix
+coords_norm <- coords
+coords_norm[,1] <- (coords[,1] - min(coords[,1])) / (max(coords[,1]) - min(coords[,1]))
+coords_norm[,2] <- (coords[,2] - min(coords[,2])) / (max(coords[,2]) - min(coords[,2]))
+dist_mat <- as.matrix(stats::dist(coords_norm))
 ```
 
-Run "spARI" function to compute spRI and spARI.
+Run "spARI" function to compute spRI and spARI using `dist_mat`.
 
 ```{r}
-res_value1 = spARI(r_labels=true_labels, c_labels=c1_labels, coords=coords)
-res_value2 = spARI(r_labels=true_labels, c_labels=c2_labels, coords=coords)
-cat(paste0("1st clustering partition: spRI=", round(res_value1[1], 3), 
-           ", spARI=", round(res_value1[2], 3), "\n"))
-cat(paste0("2nd clustering partition: spRI=", round(res_value2[1], 3), 
-           ", spARI=", round(res_value2[2], 3), "\n"))
+res_value1 <- spARI(r_labels=true_labels, c_labels=c1_labels, dist_mat=dist_mat)
+res_value2 <- spARI(r_labels=true_labels, c_labels=c2_labels, dist_mat=dist_mat)
+print(res_value1)
+print(res_value2)
 ```
 
-### Compute spRI and spARI using the sparse distance matrix
+The computation yields identical results to those obtained when using coordinates as input.
+
+#### Use a sparse distance matrix as input
 
 In this example, we generate two partitions for 100,000 objects with simulated spatial coordinates to examine the computational efficiency of the `spARI` package for large-scale spatial data.
 
-Since storing a dense matrix of 100,000$\times$100,000 would require more than 16GB of memory, we generate a sparse distance matrix of the objects. 
+Since storing a dense matrix of 100,000x100,000 would require more than 16GB of memory, we generate a sparse distance matrix of the objects. 
 
 ```{r, message=FALSE, warning=FALSE}
 library(FNN)
@@ -119,22 +212,26 @@ dim(dist_mat)
 length(dist_mat@x)
 ```
 
-**Remark.** For each object, we initially retain only the distances to its $k=5$ nearest neighbors (recorded entries in the distance matrix). However, since the $k$-nearest neighbor relationship is not symmetric (i.e., object $i$ may be among the $k$ nearest neighbors of object $j$, but $j$ is not necessarily among the $k$ nearest neighbors of $i$), the resulting matrix $D_{\text{temp}}$ is asymmetric. To ensure symmetry, we include the distance between two objects if either one is among the $k$ nearest neighbors of the other.
+**Remark1.** The sparse matrix should be stored in the R classes "dgCMatrix" or "dgTMatrix".
+
+**Remark2.** For each object, we initially retain only the distances to its $k=5$ nearest neighbors (recorded entries in the sparse matrix). However, since the $k$-nearest neighbor relationship is not symmetric (i.e., object $i$ may be among the $k$ nearest neighbors of object $j$, but $j$ is not necessarily among the $k$ nearest neighbors of $i$), the resulting matrix $D_{\text{temp}}$ is asymmetric. To ensure symmetry, we include the distance between two objects if either one is among the $k$ nearest neighbors of the other. 
+
+**Remark3.** For object pairs whose distances are empty (i.e., not recorded) in the sparse matrix, their corresponding values of the weights $\widetilde{W}(i,j)$'s in spRI/spARI are set to **zero** if they form a disagreement pair and still to one if they form an agreement pair. In addition, if we denote the set of cell pairs with recorded distances by $\Xi$, then $F=\sum_{(i,j) \in \Xi}f_{ij}$ and $H=\sum_{(i,j) \in \Xi}h_{ij}$ for the sparse distance matrix situation.
 
 Then we generate the synthetic reference and clustering partitions, with the clustering result containing 10,000 misclustered objects.
 
 ```{r}
-K = 15
+K <- 15
 set.seed(123)
 
 # reference partition
-true_labels = sample(1:K, N, replace = TRUE)
+true_labels <- sample(1:K, N, replace = TRUE)
 # clustering partition
-c_labels = true_labels
-ids = sample(which(true_labels == 1), 5000)
-c_labels[ids] = 2
-ids = sample(which(true_labels == 3), 5000)
-c_labels[ids] = 4
+c_labels <- true_labels
+ids <- sample(which(true_labels == 1), 5000)
+c_labels[ids] <- 2
+ids <- sample(which(true_labels == 3), 5000)
+c_labels[ids] <- 4
 ```
 
 Compute spRI and spARI values.
@@ -142,12 +239,46 @@ Compute spRI and spARI values.
 ```{r}
 library(spARI)
 
-stime = Sys.time()
-res = spARI(true_labels, c_labels, dist_mat=dist_mat)
-etime = Sys.time()
+stime <- Sys.time()
+res <- spARI(true_labels, c_labels, dist_mat=dist_mat)
+etime <- Sys.time()
 print(res)
-print(etime-stime)
+print(etime-stime) # at a MacBook Air powered by Apple M4 CPU with 16GB of RAM
 ```
+
+#### Use an adjacency matrix as input
+
+spARI is also compatible with spatial data characterized by an undirected graph structure, where each node corresponds to an object and edges denote connections. In this setting, the spatial proximity between any two objects is represented by an adjacency matrix, where the $(i,j)$-th entry equals one if objects $i$ and $j$ are connected and equals zero otherwise. This 0-1 symmetric adjacency matrix can be viewed as a special case of a distance matrix. **We notice that the zero corresponds to a non-recorded or missing distance that is not accounted for in computing spRI/spARI *rather than a zero distance*.** The calculation procedure with the 0-1 adjacency matrix as input is the same as that in a sparse distance matrix.
+
+The following code exhibits the use of a synthetic adjacency matrix as input, constructed for a dataset of 10 objects.
+
+```{r}
+set.seed(12)  
+## Generate adjacency matrix
+n <- 10
+p <- 0.4
+adj_mat <- matrix(0L, n, n)   
+up_tri <- upper.tri(adj_mat)
+adj_mat[up_tri] <- rbinom(sum(up_tri), size = 1, prob = p)
+adj_mat <- adj_mat + t(adj_mat)               
+diag(adj_mat) <- 0                   
+print(adj_mat)
+
+## Generate synthetic reference and clustering partitions
+ref <- sample(1:3, n, replace = TRUE)
+clu <- ref
+clu[c(6,7)] <- 1
+```
+
+Run "spARI" function to compute spRI and spARI.
+
+```{r}
+library(spARI)
+res <- spARI(r_labels = ref, c_labels = clu, dist_mat = adj_mat)
+print(res)
+```
+
+
 
 ### Conducting hypothesis testing
 
@@ -158,15 +289,16 @@ First, we import `spARI` package and load the example data
 ```{r}
 library(spARI)
 data("spARI_example_data")
-true_labels = spARI_example_data$true_labels
-c1_labels = spARI_example_data$c1_labels
-c2_labels = spARI_example_data$c2_labels
-coords = spARI_example_data$coords
+true_labels <- spARI_example_data$true_labels
+c1_labels <- spARI_example_data$c1_labels
+c2_labels <- spARI_example_data$c2_labels
+coords <- spARI_example_data$coords
 ```
 
 Then we carry out the permutation test for the clustering partitions "c1_labels" and "c2_labels". By default, the number of permutations is set to 100.
 
 ```{r}
+set.seed(42)
 perm_test(r_labels=true_labels, c_labels=c1_labels, coords=coords, 
           use_parallel=FALSE)
 perm_test(r_labels=true_labels, c_labels=c2_labels, coords=coords, 
@@ -175,7 +307,7 @@ perm_test(r_labels=true_labels, c_labels=c2_labels, coords=coords,
 
 Both the p-values are identical to zero, indicating that the observed spARI value is significantly larger than zero, and the null hypothesis "spARI=0" is rejected.
 
-### 4. Use `SpatialExperiment` object as input
+### Support for `SpatialExperiment` objects
 
 The R package is also compatible with `SpatialExperiment` object, which is a commonly used R object to store ST data. 
 
@@ -229,5 +361,14 @@ Then we use the SpatialExperiment object to calculate the spRI and spARI values 
 ```{r}
 library(spARI)
 spARI(spe=spe)
+
+set.seed(42)
 perm_test(spe=spe, use_parallel=FALSE)
 ```
+
+## Session information
+
+```{r session-info, echo=FALSE}
+sessionInfo()
+```
+

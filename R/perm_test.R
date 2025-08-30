@@ -33,18 +33,19 @@
 #' @examples
 #' library(spARI)
 #' data(spARI_example_data)
-#' true_labels = spARI_example_data$true_labels
-#' c1_labels = spARI_example_data$c1_labels
-#' c2_labels = spARI_example_data$c2_labels
-#' coords = spARI_example_data$coords
-#' test_res1 = perm_test(r_labels=true_labels, c_labels=c1_labels, coords=coords,
-#'                       use_parallel=FALSE)
-#' test_res2 = perm_test(r_labels=true_labels, c_labels=c2_labels, coords=coords,
-#'                       use_parallel=FALSE)
+#' true_labels <- spARI_example_data$true_labels
+#' c1_labels <- spARI_example_data$c1_labels
+#' c2_labels <- spARI_example_data$c2_labels
+#' coords <- spARI_example_data$coords
+#' set.seed(42)
+#' test_res1 <- perm_test(r_labels=true_labels, c_labels=c1_labels, coords=coords,
+#'                        use_parallel=FALSE)
+#' test_res2 <- perm_test(r_labels=true_labels, c_labels=c2_labels, coords=coords,
+#'                        use_parallel=FALSE)
 #'
 #' @export
 
-perm_test = function(r_labels, c_labels, coords=NULL, dist_mat=NULL,
+perm_test <- function(r_labels, c_labels, coords=NULL, dist_mat=NULL,
                      f_func_input=NULL, h_func_input=NULL, alpha_val=0.8,
                      use_parallel=TRUE, replicate_times=100, random_seed=42,
                      spe=NULL) {
@@ -57,9 +58,9 @@ perm_test = function(r_labels, c_labels, coords=NULL, dist_mat=NULL,
     if (is.null(colData(spe)$cluster)) {
       stop("Please store clustering labels in \"colData$cluster\"")
     }
-    coords = spatialCoords(spe)
-    r_labels = colData(spe)$cell_type
-    c_labels = colData(spe)$cluster
+    coords <- spatialCoords(spe)
+    r_labels <- colData(spe)$cell_type
+    c_labels <- colData(spe)$cluster
   }
 
   if (is.null(coords) & is.null(dist_mat)) {
@@ -71,9 +72,9 @@ perm_test = function(r_labels, c_labels, coords=NULL, dist_mat=NULL,
       stop("Please align the length of r_label, the length of c_label, and the dimension of coords!")
     }
     ## Coordinates normalization
-    coords[,1] = (coords[,1] - min(coords[,1])) / (max(coords[,1]) - min(coords[,1]))
-    coords[,2] = (coords[,2] - min(coords[,2])) / (max(coords[,2]) - min(coords[,2]))
-    dist_mat = as.matrix(stats::dist(coords))
+    coords[,1] <- (coords[,1] - min(coords[,1])) / (max(coords[,1]) - min(coords[,1]))
+    coords[,2] <- (coords[,2] - min(coords[,2])) / (max(coords[,2]) - min(coords[,2]))
+    dist_mat <- as.matrix(stats::dist(coords))
   } else if (length(r_labels) != length(c_labels) |
              length(r_labels) != nrow(dist_mat) |
              length(c_labels) != nrow(dist_mat)) {
@@ -88,9 +89,9 @@ perm_test = function(r_labels, c_labels, coords=NULL, dist_mat=NULL,
 
 
   # observed spARI value
-  spARI_obs = spARI(r_labels, c_labels, dist_mat=dist_mat,
-                    f_func_input = f_func_input, h_func_input = h_func_input,
-                    alpha_val = alpha_val)[2]
+  spARI_obs <- spARI(r_labels, c_labels, dist_mat=dist_mat,
+                     f_func_input = f_func_input, h_func_input = h_func_input,
+                     alpha_val = alpha_val)[2]
 
   # permutation test (in parallel)
   if ((length(unique(r_labels)) == 1 & length(unique(c_labels)) == 1) |
@@ -98,42 +99,52 @@ perm_test = function(r_labels, c_labels, coords=NULL, dist_mat=NULL,
     cat("The spARI value is always equal to one!\n")
     return(invisible(NULL))
   } else if (use_parallel) {
-    ncores <- min(6, max(1, parallel::detectCores() - 2))
-    cl <- parallel::makeCluster(ncores)
-    parallel::clusterSetRNGStream(cl, iseed = random_seed)
+    ncores <- min(6, max(1, BiocParallel::multicoreWorkers()))
 
-    spARI_sim_record <- parallel::parLapply(
-      cl, seq_len(replicate_times),
-      fun = function(i, r_labels, c_labels, dist_mat, f_func_input, h_func_input, alpha_val) {
+    BPPARAM <- if (.Platform$OS.type == "windows") {
+      BiocParallel::SnowParam(workers = ncores, type = "SOCK", RNGseed = random_seed)
+    } else {
+      BiocParallel::MulticoreParam(workers = ncores, RNGseed = random_seed)
+    }
+
+    BiocParallel::bpstart(BPPARAM)
+    on.exit(BiocParallel::bpstop(BPPARAM), add = TRUE)
+
+    spARI_sim_record <- BiocParallel::bplapply(
+      X = seq_len(replicate_times),
+      FUN = function(i) {
         r_labels_perm <- sample(r_labels)
         c_labels_perm <- sample(c_labels)
-        spARI(r_labels_perm, c_labels_perm, dist_mat = dist_mat,
-              f_func_input = f_func_input, h_func_input = h_func_input,
-              alpha_val = alpha_val)[2]
+        spARI(
+          r_labels_perm, c_labels_perm,
+          dist_mat = dist_mat,
+          f_func_input = f_func_input,
+          h_func_input = h_func_input,
+          alpha_val = alpha_val
+        )[2]
       },
-      r_labels, c_labels, dist_mat, f_func_input, h_func_input, alpha_val
+      BPPARAM = BPPARAM
     )
 
-    parallel::stopCluster(cl)
-    spARI_sim_record <- unlist(spARI_sim_record)
+    spARI_sim_record <- unlist(spARI_sim_record, use.names = FALSE)
   } else {
     # set.seed(random_seed)
     spARI_sim_record <- vapply(seq_len(replicate_times), function(i) {
       r_labels_perm <- sample(r_labels)
       c_labels_perm <- sample(c_labels)
-      spARI_val = spARI(r_labels_perm, c_labels_perm, dist_mat = dist_mat,
-                        f_func_input = f_func_input, h_func_input = h_func_input,
-                        alpha_val = alpha_val)[2]
+      spARI_val <- spARI(r_labels_perm, c_labels_perm, dist_mat = dist_mat,
+                         f_func_input = f_func_input, h_func_input = h_func_input,
+                         alpha_val = alpha_val)[2]
       return(spARI_val)
     }, FUN.VALUE = numeric(1))
   }
 
   # compute p value
-  p_value = sum(spARI_sim_record > spARI_obs) / replicate_times
+  p_value <- sum(spARI_sim_record > spARI_obs) / replicate_times
 
   ## Outputs
-  outputs = c(spARI_obs, p_value)
-  names(outputs) = c("spARI_obs", "p-value")
+  outputs <- c(spARI_obs, p_value)
+  names(outputs) <- c("spARI_obs", "p-value")
   return(outputs)
 }
 

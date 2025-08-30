@@ -1,3 +1,11 @@
+# spARI 0.99.8 (2025-08-xx)
+
+- Updated the README file
+- Updated the descriptions of parameters and examples in R functions `spARI` and `perm_test` 
+- Updated the code `sum_f_vals_total = sum(f_func(dist_mat_Lvec))` to `sum_f_vals_total = sum(f_func(dist_mat_Lvec[dist_mat_Lvec != 0]))`
+- Added `set.seed()` to the example of `perm_test` when `use_parallel = FALSE`
+- Replaced all occurrences of `=` used for assignment (except in function arguments) with `<-`
+
 # spARI 0.99.7 (2025-08-07)
 
 - Converted `spARI_example_data` into a list object
