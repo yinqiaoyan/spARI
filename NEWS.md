@@ -1,4 +1,8 @@
-# spARI 0.99.8 (2025-08-xx)
+# spARI 0.99.9 (2025-08-30)
+
+- Deleted system files
+
+# spARI 0.99.8 (2025-08-30)
 
 - Updated the README file
 - Updated the descriptions of parameters and examples in R functions `spARI` and `perm_test` 
