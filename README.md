@@ -231,7 +231,19 @@ adj_mat <- matrix(0L, n, n)
 up_tri <- upper.tri(adj_mat)
 adj_mat[up_tri] <- rbinom(sum(up_tri), size = 1, prob = p)
 adj_mat <- adj_mat + t(adj_mat)               
-diag(adj_mat) <- 0                    
+diag(adj_mat) <- 0
+print(adj_mat)
+#       [,1] [,2] [,3] [,4] [,5] [,6] [,7] [,8] [,9] [,10]
+#  [1,]    0    0    1    0    0    0    0    1    0     1
+#  [2,]    0    0    1    0    1    1    0    0    1     1
+#  [3,]    1    1    0    0    0    0    0    1    0     0
+#  [4,]    0    0    0    0    0    0    1    0    1     0
+#  [5,]    0    1    0    0    0    0    0    0    1     0
+#  [6,]    0    1    0    0    0    0    0    0    1     0
+#  [7,]    0    0    0    1    0    0    0    0    1     1
+#  [8,]    1    0    1    0    0    0    0    0    1     0
+#  [9,]    0    1    0    1    1    1    1    1    0     1
+# [10,]    1    1    0    0    0    0    1    0    1     0                  
 
 ## Generate synthetic reference and clustering partitions
 ref <- sample(1:3, n, replace = TRUE)
