@@ -218,7 +218,7 @@ print(etime-stime)
 
 #### 1.4 Use an adjacency matrix as input
 
-spARI is also compatible with spatial data characterized by an undirected graph structure, where each node corresponds to an object and edges denote connections. In this setting, the spatial proximity between any two objects is represented by an adjacency matrix, where the $(i,j)$-th entry equals one if objects $i$ and $j$ are connected and equals zero otherwise. This 0-1 symmetric adjacency matrix can be viewed as a special case of a distance matrix. We notice that the zero corresponds to a non-recorded or missing distance that is not accounted for in computing spRI/spARI *rather than a zero distance*. The calculation procedure with the 0-1 adjacency matrix as input is the same as that in a sparse distance matrix.
+spARI is also compatible with spatial data characterized by an undirected graph structure, where each node corresponds to an object and edges denote connections. In this setting, the spatial proximity between any two objects is represented by an adjacency matrix, where the $(i,j)$-th entry equals one if objects $i$ and $j$ are connected and equals zero otherwise. This 0-1 symmetric adjacency matrix can be viewed as a special case of a distance matrix. **We notice that the zero corresponds to a non-recorded or missing distance that is not accounted for in computing spRI/spARI *rather than a zero distance*.** The calculation procedure with the 0-1 adjacency matrix as input is the same as that in a sparse distance matrix.
 
 ### 2. Conducting hypothesis testing
 
