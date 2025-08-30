@@ -220,6 +220,37 @@ print(etime-stime)
 
 spARI is also compatible with spatial data characterized by an undirected graph structure, where each node corresponds to an object and edges denote connections. In this setting, the spatial proximity between any two objects is represented by an adjacency matrix, where the $(i,j)$-th entry equals one if objects $i$ and $j$ are connected and equals zero otherwise. This 0-1 symmetric adjacency matrix can be viewed as a special case of a distance matrix. **We notice that the zero corresponds to a non-recorded or missing distance that is not accounted for in computing spRI/spARI *rather than a zero distance*.** The calculation procedure with the 0-1 adjacency matrix as input is the same as that in a sparse distance matrix.
 
+The following code exhibits the use of a synthetic adjacency matrix as input, constructed for a dataset of 10 objects.
+
+```R
+set.seed(12)  
+## Generate adjacency matrix
+n <- 10
+p <- 0.4
+adj_mat <- matrix(0L, n, n)   
+up_tri <- upper.tri(adj_mat)
+adj_mat[up_tri] <- rbinom(sum(up_tri), size = 1, prob = p)
+adj_mat <- adj_mat + t(adj_mat)               
+diag(adj_mat) <- 0                    
+
+## Generate synthetic reference and clustering partitions
+ref <- sample(1:3, n, replace = TRUE)
+clu <- ref
+clu[c(6,7)] <- 1
+```
+
+Run "spARI" function to compute spRI and spARI.
+
+```R
+library(spARI)
+res <- spARI(r_labels = ref, c_labels = clu, dist_mat = adj_mat)
+print(res)
+#      spRI     spARI 
+# 0.7403798 0.3479276 
+```
+
+### 
+
 ### 2. Conducting hypothesis testing
 
 We conduct the permutation test for the observed spARI value of the two clustering partitions in the example data. 
