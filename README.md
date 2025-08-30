@@ -180,7 +180,7 @@ length(dist_mat@x)
 
 **Remark1.** The sparse matrix should be stored in the R classes "dgCMatrix" or "dgTMatrix".
 
-**Remark2.** For each object, we initially retain only the distances to its $k=5$ nearest neighbors (recorded entries in the distance matrix). However, since the $k$-nearest neighbor relationship is not symmetric (i.e., object $i$ may be among the $k$ nearest neighbors of object $j$, but $j$ is not necessarily among the $k$ nearest neighbors of $i$), the resulting matrix $D_{\text{temp}}$ is asymmetric. To ensure symmetry, we include the distance between two objects if either one is among the $k$ nearest neighbors of the other. 
+**Remark2.** For each object, we initially retain only the distances to its $k=5$ nearest neighbors (recorded entries in the sparse matrix). However, since the $k$-nearest neighbor relationship is not symmetric (i.e., object $i$ may be among the $k$ nearest neighbors of object $j$, but $j$ is not necessarily among the $k$ nearest neighbors of $i$), the resulting matrix $D_{\text{temp}}$ is asymmetric. To ensure symmetry, we include the distance between two objects if either one is among the $k$ nearest neighbors of the other. 
 
 **Remark3.** For object pairs whose distances are empty (i.e., not recorded) in the sparse matrix, their corresponding values of the weights $\widetilde{W}(i,j)$'s in spRI/spARI are set to **zero** if they form a disagreement pair and still to one if they form an agreement pair. In addition, if we denote the set of cell pairs with recorded distances by $\Xi$, then $F=\sum_{(i,j) \in \Xi}f_{ij}$ and $H=\sum_{(i,j) \in \Xi}h_{ij}$ for the sparse distance matrix situation.
 
@@ -215,6 +215,10 @@ print(etime-stime)
 # Time difference of 5.503251 secs 
 # at a MacBook Air powered by Apple M4 CPU with 16GB of RAM
 ```
+
+#### 1.4 Use an adjacency matrix as input
+
+spARI is also compatible with spatial data characterized by an undirected graph structure, where each node corresponds to an object and edges denote connections. In this setting, the spatial proximity between any two objects is represented by an adjacency matrix, where the $(i,j)$-th entry equals one if objects $i$ and $j$ are connected and equals zero otherwise. This 0-1 symmetric adjacency matrix can be viewed as a special case of a distance matrix. We notice that the zero corresponds to a non-recorded or missing distance that is not accounted for in computing spRI/spARI *rather than a zero distance*. The calculation procedure with the 0-1 adjacency matrix as input is the same as that in a sparse distance matrix.
 
 ### 2. Conducting hypothesis testing
 
