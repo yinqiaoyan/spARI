@@ -1,3 +1,7 @@
+# spARI 0.99.11 (2025-08-30)
+
+- Removed `parallel` from the `Imports` field in the DESCRIPTION file.
+
 # spARI 0.99.10 (2025-08-30)
 
 - Deleted system file `.Rapp.history`
