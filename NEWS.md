@@ -1,3 +1,7 @@
+# spARI 0.99.10 (2025-08-30)
+
+- Deleted system file `.Rapp.history`
+
 # spARI 0.99.9 (2025-08-30)
 
 - Deleted system files
