@@ -87,7 +87,7 @@ res_value2 = spARI(r_labels=true_labels, c_labels=c2_labels, coords=coords)
 Users can simply run the code `example("spARI")` to carry out this example.
 
 ```R
-library(BACT)
+library(spARI)
 example("spARI")
 # 1st clustering partition: spRI=0.926, spARI=0.672
 # 2nd clustering partition: spRI=0.917, spARI=0.632
