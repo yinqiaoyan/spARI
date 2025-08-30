@@ -1,9 +1,10 @@
-Changes in version 0.99.0 (2025-07-15)
-+ Submitted to Bioconductor
+Changes in version 1.1 (2025-08-30)
++ Updated the README file
++ Updated the code `sum_f_vals_total = sum(f_func(dist_mat_Lvec))` to `sum_f_vals_total = sum(f_func(dist_mat_Lvec[dist_mat_Lvec != 0]))`
 
 
 
-Changes in version 0.99.1 (2025-07-23)
+Changes in version 1.0 (2025-08-03)
 
 + Generate spARI_example_data.rda in the directory `data/` and finish man documenation on the data object
 
