@@ -1,3 +1,7 @@
+# spARI 0.99.12 (2025-09-01)
+
+- Updated the README file.
+
 # spARI 0.99.11 (2025-08-30)
 
 - Removed `parallel` from the `Imports` field in the DESCRIPTION file.
