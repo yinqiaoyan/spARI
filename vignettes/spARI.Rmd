@@ -5,7 +5,7 @@ output:
   BiocStyle::html_document:
     toc: true
     toc_depth: 2
-date: "2025-09-01"
+date: "2025-09-03"
 vignette: >
   %\VignetteIndexEntry{An Introduction to spARI}
   %\VignetteEngine{knitr::rmarkdown}

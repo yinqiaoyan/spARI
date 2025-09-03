@@ -1,3 +1,7 @@
+# spARI 0.99.14 (2025-09-04)
+
+- Added the `FNN` package to the `Suggests` field in the DESCRIPTION file.
+
 # spARI 0.99.13 (2025-09-04)
 
 - Updated `vignettes/spARI.Rmd`.

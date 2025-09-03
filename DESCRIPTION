@@ -2,7 +2,7 @@ Package: spARI
 Type: Package
 Title: Spatially Aware Adjusted Rand Index for Evaluating Spatial Transcritpomics 
     Clustering
-Version: 0.99.13
+Version: 0.99.14
 Authors@R: c(
     person("Yinqiao", "Yan", email = "yinqiaoyan@bjut.edu.cn", role = c("aut", "cre")),
     person("Xiangnan", "Feng", role = c("aut", "fnd")),
@@ -20,6 +20,7 @@ LazyData: false
 RoxygenNote: 7.3.2
 VignetteBuilder: knitr
 Suggests: 
+    FNN,
     knitr,
     rmarkdown,
     BiocStyle,
