@@ -13,6 +13,7 @@ vignette: >
 ---
 
 ```{r setup, include=FALSE}
+hasFNN <- requireNamespace("FNN", quietly = TRUE)
 knitr::opts_chunk$set(echo = TRUE, fig.align = "center")
 ```
 
@@ -40,7 +41,7 @@ devtools::install_github("yinqiaoyan/spARI", dependencies = TRUE)
 
 Other required packages also need to be installed in advance.
 
-```{r install2, eval=FALSE}
+```{r install_FNN, eval=FALSE}
 install.packages("FNN")  # find k-nearest neighbors
 ```
 
@@ -161,9 +162,9 @@ The computation yields identical results to those obtained when using coordinate
 
 In this example, we generate two partitions for 100,000 objects with simulated spatial coordinates to examine the computational efficiency of the `spARI` package for large-scale spatial data.
 
-Since storing a dense matrix of 100,000x100,000 would require more than 16GB of memory, we generate a sparse distance matrix of the objects. 
+Since storing a dense matrix of 100,000x100,000 would require more than 16GB of memory, we generate a sparse distance matrix of the objects, containing approximately 600,000 non-empty entries. 
 
-```{r, message=FALSE, warning=FALSE}
+```{r, message=FALSE, warning=FALSE, eval=hasFNN}
 library(FNN)
 library(Matrix)
 
@@ -209,7 +210,9 @@ coords <- matrix(runif(N*2), N, 2)  # coordinates ranging between 0 and 1
 dist_mat <- build_symmetric_knn_distance_matrix(coords, k = 5)
 
 dim(dist_mat)
+# 100000 100000
 length(dist_mat@x)
+# 595850
 ```
 
 **Remark1.** The sparse matrix should be stored in the R classes "dgCMatrix" or "dgTMatrix".
@@ -220,7 +223,7 @@ length(dist_mat@x)
 
 Then we generate the synthetic reference and clustering partitions, with the clustering result containing 10,000 misclustered objects.
 
-```{r}
+```{r, eval=hasFNN}
 K <- 15
 set.seed(123)
 
@@ -236,14 +239,18 @@ c_labels[ids] <- 4
 
 Compute spRI and spARI values.
 
-```{r}
+```{r, eval=hasFNN}
 library(spARI)
 
 stime <- Sys.time()
 res <- spARI(true_labels, c_labels, dist_mat=dist_mat)
 etime <- Sys.time()
 print(res)
-print(etime-stime) # at a MacBook Air powered by Apple M4 CPU with 16GB of RAM
+#      spRI     spARI 
+# 0.9834065 0.8752946 
+print(etime-stime) 
+# Execution time is about 4.8 seconds
+# at a MacBook Air powered by Apple M4 CPU with 16GB of RAM
 ```
 
 #### Use an adjacency matrix as input
