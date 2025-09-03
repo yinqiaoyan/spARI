@@ -1,6 +1,6 @@
 ## spARI
 
-Current version: 0.99.14 (2025-09-04)  
+Current version: 0.99.15 (2025-09-04)  
 
 The R package **spARI** is designed to compute two novel clustering evaluation metrics—the **spatially aware Rand index (spRI)** and its adjusted version (**spARI**)—for assessing spatial transcriptomics clustering. Unlike the traditional Rand index (RI) and adjusted Rand index (ARI), spRI and spARI incorporate spatial distance information into clustering evaluation. When comparing two partitions, spRI assigns a weight to each disagreement pair—two objects in the same cluster of one partition but in different clusters of the other—based on their spatial distance, allowing for a more refined distinction between disagreement pairs. The spRI value ranges between zero and one, and the spARI value is less than or equal to one with an expected value of zero.  
 
@@ -91,7 +91,7 @@ res_value2 <- spARI(r_labels=true_labels, c_labels=c2_labels, coords=coords)
 Users can simply run the code `example("spARI")` to carry out this example.
 
 ```R
-library(BACT)
+library(spARI)
 example("spARI")
 # 1st clustering partition: spRI=0.926, spARI=0.672
 # 2nd clustering partition: spRI=0.917, spARI=0.632

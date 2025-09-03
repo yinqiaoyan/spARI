@@ -1,3 +1,7 @@
+# spARI 0.99.15 (2025-09-04)
+
+- Updated the README file.
+
 # spARI 0.99.14 (2025-09-04)
 
 - Added the `FNN` package to the `Suggests` field in the DESCRIPTION file.
