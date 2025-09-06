@@ -1,3 +1,7 @@
+# spARI 0.99.16 (2025-09-06)
+
+- Updated `vignettes/spARI.Rmd`.
+
 # spARI 0.99.15 (2025-09-04)
 
 - Updated the README file.

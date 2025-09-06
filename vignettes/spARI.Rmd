@@ -5,7 +5,7 @@ output:
   BiocStyle::html_document:
     toc: true
     toc_depth: 2
-date: "2025-09-03"
+date: "2025-09-06"
 vignette: >
   %\VignetteIndexEntry{An Introduction to spARI}
   %\VignetteEngine{knitr::rmarkdown}
@@ -17,7 +17,7 @@ hasFNN <- requireNamespace("FNN", quietly = TRUE)
 knitr::opts_chunk$set(echo = TRUE, fig.align = "center")
 ```
 
-## Introduction
+# Introduction
 
 The R package **spARI** is designed to compute two novel clustering evaluation metrics—the **spatially aware Rand index (spRI)** and its adjusted version (**spARI**)—for assessing spatial transcriptomics clustering. Unlike the traditional Rand index (RI) and adjusted Rand index (ARI), spRI and spARI incorporate spatial distance information into clustering evaluation. When comparing two partitions, spRI assigns a weight to each disagreement pair—two objects in the same cluster of one partition but in different clusters of the other—based on their spatial distance, allowing for a more refined distinction between disagreement pairs. The spRI value ranges between zero and one, and the spARI value is less than or equal to one with an expected value of zero.  
 
@@ -31,7 +31,7 @@ To implement this package, users are required to input two partitions and either
 
 The `spARI` package is compatible with Windows, Linux, and macOS, and can be easily installed on all three platforms.
 
-## Installation
+# Installation
 
 Users can install the `spARI` package from GitHub.
 
@@ -45,11 +45,11 @@ Other required packages also need to be installed in advance.
 install.packages("FNN")  # find k-nearest neighbors
 ```
 
-## Example Code
+# Example Code
 
-### Compute spRI and spARI 
+## Compute spRI and spARI 
 
-#### Use spatial coordinates as input
+### Use spatial coordinates as input
 
 The following code shows an example (the third simulation study in the manuscript) that runs the main function "spARI" in our package.
 
@@ -128,7 +128,7 @@ print(res_A)
 print(res_B)
 ```
 
-#### Use a distance matrix as input
+### Use a distance matrix as input
 
 The following code shows an example that runs the main function "spARI" using the distance matrix as input.
 
@@ -158,7 +158,7 @@ print(res_value2)
 
 The computation yields identical results to those obtained when using coordinates as input.
 
-#### Use a sparse distance matrix as input
+### Use a sparse distance matrix as input
 
 In this example, we generate two partitions for 100,000 objects with simulated spatial coordinates to examine the computational efficiency of the `spARI` package for large-scale spatial data.
 
@@ -253,7 +253,7 @@ print(etime-stime)
 # at a MacBook Air powered by Apple M4 CPU with 16GB of RAM
 ```
 
-#### Use an adjacency matrix as input
+### Use an adjacency matrix as input
 
 spARI is also compatible with spatial data characterized by an undirected graph structure, where each node corresponds to an object and edges denote connections. In this setting, the spatial proximity between any two objects is represented by an adjacency matrix, where the $(i,j)$-th entry equals one if objects $i$ and $j$ are connected and equals zero otherwise. This 0-1 symmetric adjacency matrix can be viewed as a special case of a distance matrix. **We notice that the zero corresponds to a non-recorded or missing distance that is not accounted for in computing spRI/spARI *rather than a zero distance*.** The calculation procedure with the 0-1 adjacency matrix as input is the same as that in a sparse distance matrix.
 
@@ -287,7 +287,7 @@ print(res)
 
 
 
-### Conducting hypothesis testing
+## Conducting hypothesis testing
 
 We conduct the permutation test for the observed spARI value of the two clustering partitions in the example data. 
 
@@ -314,7 +314,7 @@ perm_test(r_labels=true_labels, c_labels=c2_labels, coords=coords,
 
 Both the p-values are identical to zero, indicating that the observed spARI value is significantly larger than zero, and the null hypothesis "spARI=0" is rejected.
 
-### Support for `SpatialExperiment` objects
+## Support for `SpatialExperiment` objects
 
 The R package is also compatible with `SpatialExperiment` object, which is a commonly used R object to store ST data. 
 
@@ -373,7 +373,7 @@ set.seed(42)
 perm_test(spe=spe, use_parallel=FALSE)
 ```
 
-## Session information
+# Session information
 
 ```{r session-info, echo=FALSE}
 sessionInfo()
