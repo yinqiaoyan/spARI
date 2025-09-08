@@ -30,6 +30,22 @@ The `spARI` package is compatible with Windows, Linux, and macOS, and can be eas
 devtools::install_github("yinqiaoyan/spARI")
 ```
 
+`spARI` is also available through [Bioconductor](https://bioconductor.org/packages/devel/bioc/html/spARI.html).
+
+```R
+# Install the Bioconductor package manager, if necessary
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+# Set repositories to Bioconductor defaults, allow both binary and source packages, and use libcurl for downloads
+# options(repos = BiocManager::repositories(), pkgType = "both", download.file.method = "libcurl")
+
+# The following initializes usage of Bioc devel
+BiocManager::install(version='devel')
+
+BiocManager::install("spARI")
+```
+
 
 
 ## Datasets information
