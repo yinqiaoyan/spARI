@@ -1,3 +1,7 @@
+# spARI 0.99.17 (2025-09-27)
+
+- Added `inst/CITATION`.
+
 # spARI 0.99.16 (2025-09-06)
 
 - Updated `vignettes/spARI.Rmd`.

@@ -1,0 +1,16 @@
+## inst/CITATION
+bibentry(
+  bibtype = "Article",
+  title   = "Spatially aware adjusted Rand index for evaluating spatial transcriptomics clustering",
+  author  = c(
+    person("Yinqiao", "Yan"),
+    person("Xiangnan", "Feng"),
+    person("Xiangyu", "Luo")
+  ),
+  journal = "Biometrics",
+  year    = 2025,
+  volume  = 81,
+  number  = 3,
+  pages   = "ujaf127",
+  doi     = "10.1093/biomtc/ujaf127"
+)
